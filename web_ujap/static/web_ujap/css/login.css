@@ -1,0 +1,234 @@
+body {
+
+    background-color: #f2f3f2; 
+    font-family: sans-serif;
+    margin: 0;
+    color: #333; 
+    padding: 20px;
+    padding-top: 100px !important; 
+}
+
+
+.navbar {
+    background-color: #336699; 
+    padding: 15px 0;
+    width: 100%;
+    position: fixed; 
+    top: 0;
+    left: 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.nav-container {
+    max-width: 1100px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.nav-logo {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+
+.nav-logo span {
+    color: #da1d3c; 
+}
+
+
+/* 1. Mantenemos el UJAP (texto blanco) siempre blanco en hover */
+.nav-logo:hover {
+    color: white !important;
+    text-decoration: none;
+}
+
+/* 2. Forzamos que el .online se quede rojo siempre */
+.logo-red {
+    color: #da1d3c !important; /* Rojo UJAP */
+    transition: all 0.3s ease;
+}
+
+
+.nav-logo:hover .logo-red {
+    color: #da1d3c !important;
+    text-shadow: 0 0 10px rgba(218, 29, 60, 0.3); 
+}
+
+
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+    margin: 0;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 16px;
+    transition: color 0.3s ease;
+    border: none; /* Quitamos el borde que le pusimos a los links del form */
+}
+
+.nav-links a:hover {
+    color: #EEDDAD; /* Color crema UJAP al pasar el mouse */
+    transition: color 0.3s ease;
+}
+
+/* Botón especial en la navbar */
+.nav-btn {
+    background-color: #da1d3c;
+    padding: 8px 18px;
+    border-radius: 5px;
+    transition: transform 0.3s ease !important;
+}
+
+.nav-btn:hover {
+    background-color: #b31630 !important;
+    transform: scale(1.05);
+
+}
+
+
+
+
+
+
+
+
+h2 {
+    text-align: center;
+    /* Azul institucional UJAP */
+    color: #336699; 
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    padding: 20px;
+    font-size: 45px; /* Lo bajé un pelo para que quepa mejor */
+    border: 3px solid #336699;
+    border-radius: 8px; 
+}
+
+input, select {
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+    padding: 15px;
+    border: 1px solid #ccc;
+    /* Sombra suave azulada */
+    box-shadow: 0 0 10px rgba(51, 102, 153, 0.1);
+    background-color: white;
+    border-radius: 4px;
+    color: #333;
+    outline: none;
+}
+
+form {
+    background-color: white;
+    padding: 10px;
+    max-width: 500px;
+    margin: auto;
+    /* Sombra azul institucional para el glow */
+box-shadow: 0px 10px 100px rgba(10, 20, 40, 0.8);
+    margin-top: 50px;
+    border-radius: 8px;
+    border: 1px solid #da1d3c; 
+    border-top: 6px solid #da1d3c; 
+}
+
+.form_input {
+    padding: 10px 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #336699; 
+    font-size: 16px;
+    font-weight: bold;
+}
+
+a {
+    /* Rojo institucional para los links */
+    color: #da1d3c; 
+    text-decoration: none;
+    border-bottom: 1px solid #da1d3c;
+}
+
+a:hover {
+    color: #336699;
+    border-bottom: 1px solid #336699;
+}
+
+/* Ajuste del autocompletado para fondo claro */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+    -webkit-text-fill-color: #333 !important;
+    -webkit-box-shadow: 0 0 0px 500px #ffffff inset !important;   
+    border: 1px solid #336699 !important;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    margin-top: 20px;
+    /* Botón azul principal */
+    background-color: #336699;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-submit:hover {
+
+    background-color: #da1d3c;
+    box-shadow: 0 0 20px rgba(218, 29, 60, 0.3);
+    transform: translateY(-2px); 
+}
+
+.btn-submit:active {
+    transform: translateY(0);
+}
+
+
+.checkbox{
+    width: auto;
+    display: inline-block;
+    margin-left: 10px;
+    
+}
+
+.form_recover {
+    text-align: center; /* Centra el link si quieres */
+    margin-top: 15px;   /* Le da aire respecto al botón */
+}
+
+.form_recover a {
+    color: #da1d3c;      /* Rojo UJAP */
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    border-bottom: 1px solid transparent; /* Para el efecto hover */
+    transition: all 0.3s ease;
+}
+
+.form_recover a:hover {
+    color: #336699;      /* Cambia a Azul UJAP al pasar el mouse */
+    border-bottom: 1px solid #336699;
+}
+
+
+
+

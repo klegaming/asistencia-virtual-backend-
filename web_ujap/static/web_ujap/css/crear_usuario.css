@@ -1,0 +1,206 @@
+/* --- CONFIGURACIÓN BASE --- */
+body {
+    background-color: #f2f3f2; 
+    font-family: sans-serif;
+    margin: 0;
+    color: #333;
+    padding: 20px;
+    padding-top: 100px !important; 
+}
+
+/* --- BARRA DE NAVEGACIÓN --- */
+.navbar {
+    background-color: #336699; 
+    padding: 15px 0;
+    width: 100%;
+    position: fixed; 
+    top: 0;
+    left: 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.nav-container {
+    max-width: 1100px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.nav-logo {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.logo-red {
+    color: #da1d3c !important; 
+}
+
+.nav-logo:hover .logo-red {
+    color: #da1d3c !important;
+    text-shadow: 0 0 10px rgba(218, 29, 60, 0.3);
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+    margin: 0;
+    align-items: center;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.nav-links a:hover {
+    color: #EEDDAD !important;
+}
+
+/* --- ESTILO BOTÓN INICIO (PARA CONTACTO Y REGISTRO) --- */
+.nav-links li:first-child a {
+    background-color: #da1d3c; 
+    border: 1px solid #EEDDAD;
+    padding: 8px 18px;
+    border-radius: 5px;
+    transition: all 0.3s ease !important;
+}
+
+.nav-links li:first-child a:hover {
+    background-color: #b31630 !important;
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(238, 221, 173, 0.4);
+}
+
+.nav-btn {
+    background-color: #da1d3c;
+    border: 1px solid #EEDDAD;
+    padding: 8px 18px;
+    border-radius: 5px;
+}
+
+/* --- FORMULARIO --- */
+h2 {
+    text-align: center;
+    color: #336699;
+    text-shadow: 2px 2px 0px #EEDDAD; 
+    font-size: 40px;
+}
+
+form {
+    background-color: #eeeeee75;
+    padding: 20px;
+    max-width: 500px;
+    margin: auto;
+    border-radius: 8px;
+    box-shadow: 0px 20px 50px rgba(196, 33, 33, 0.6);
+    border-top: 8px solid #336699; 
+    border-bottom: 4px solid #EEDDAD; 
+}
+
+fieldset {
+    border: 2px solid #EEDDAD;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+}
+
+legend {
+    color: #da1d3c;
+    font-weight: bold;
+    padding: 0 10px;
+}
+
+input, select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+}
+
+input:focus {
+    border: 2px solid #336699;
+    box-shadow: 0 0 8px rgba(238, 221, 173, 0.5);
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #336699;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.btn-submit {
+    background: linear-gradient(135deg, #336699 0%, #254d73 100%);
+    color: white;
+    border: 1px solid #EEDDAD;
+    padding: 15px;
+    width: 100%;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-submit:hover {
+    background: #da1d3c;
+    transform: translateY(-2px);
+}
+
+a {
+    color: #da1d3c;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+/* Contenedor principal de mensajes */
+.messages-container {
+    max-width: 500px; /* Ajustado al ancho de tu form */
+    margin: 20px auto;
+    padding: 0 10px;
+}
+
+/* Estilo general de la alerta */
+.alert {
+    padding: 15px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    animation: slideDown 0.5s ease-out; /* Animación de entrada */
+}
+
+/* Estilo específico para errores (Rojo UJAP suave) */
+/* Esto asegura que funcione si Django manda 'error' o 'danger' */
+.alert-error, .alert-danger {
+    background-color: #fce4e4; 
+    color: #da1d3c;           
+    border: 1px solid #da1d3c;
+    box-shadow: 0 4px 15px rgba(218, 29, 60, 0.1);
+}
+
+
+/* Animación para que no aparezca de golpe */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

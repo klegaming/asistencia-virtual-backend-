@@ -192,3 +192,57 @@ legend {
     color: #336699;
     border-bottom: 1px solid #336699;
 }
+
+.menu-checkbox {
+    display: none;
+}
+
+
+.menu-icon {
+    display: none;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    user-select: none;
+}
+
+
+@media (max-width: 768px) {
+
+    .menu-icon {
+        display: block;
+    }
+
+
+    .nav-links {
+        display: none; 
+        flex-direction: column; 
+        position: absolute;
+        top: 62px; 
+        left: 0;
+        width: 100%;
+        background-color: #336699; 
+        padding: 20px 0;
+        box-shadow: 0 10px 10px rgba(0,0,0,0.2);
+        gap: 15px; 
+        z-index: 999;
+    }
+
+
+    .nav-links li {
+        text-align: center;
+        width: 100%;
+    }
+
+
+    .nav-links a.nav-btn {
+        display: inline-block;
+        margin-top: 10px;
+    }
+
+
+    .menu-checkbox:checked ~ .nav-links {
+        display: flex;
+    }
+}
+

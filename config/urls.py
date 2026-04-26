@@ -16,12 +16,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from web_ujap.views import login_view,contacto_view,recuperar_view,usuario_view # Importamos tu función
-
+from web_ujap.views import (
+    login_view,
+    contacto_view,
+    recuperar_view,
+    recuperar_enviado_view,
+    recuperar_confirmar_view,
+    usuario_view,
+) 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', login_view, name='login'), # Página principal
-    path('contacto/', contacto_view, name='contacto'), # Ruta para la página de contacto
-    path('recuperar/', recuperar_view, name='recuperar'), # Ruta para la página de recuperación de contraseña
-    path('usuario/', usuario_view, name='usuario'), # Ruta para la página de creación de usuario
+    path('', login_view, name='login'),
+    path('contacto/', contacto_view, name='contacto'),
+    path('recuperar/', recuperar_view, name='recuperar'),
+    path('recuperar/enviado/', recuperar_enviado_view, name='recuperar_enviado'),
+    path('recuperar/confirmar/<str:token>/', recuperar_confirmar_view, name='recuperar_confirmar'),
+    path('usuario/', usuario_view, name='usuario'),
 ]

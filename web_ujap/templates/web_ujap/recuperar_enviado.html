@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Correo enviado - UJAP.online</title>
+  <link rel="stylesheet" href="{% static 'web_ujap/css/recuperar.css' %}">
+  <link rel="icon" href="{% static 'web_ujap/css/img/logo.ico' %}" type="image/x-icon">
+  <style>
+    .msg-box{max-width:420px;margin:60px auto;text-align:center;padding:40px;background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.1)}
+    .msg-box .icon{font-size:52px;margin-bottom:16px}
+    .msg-box h2{color:#1a1a2e;margin-bottom:10px}
+    .msg-box p{color:#666;font-size:14px;line-height:1.7}
+    .msg-box a{display:inline-block;margin-top:24px;color:#e63946;font-weight:600;text-decoration:none}
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="{% url 'login' %}" class="nav-logo">UJAP<span class="logo-red">.online</span></a>
+    </div>
+  </nav>
+  <div class="msg-box">
+    <div class="icon">📬</div>
+    <h2>Revisá tu correo</h2>
+    <p>Si tu dirección está registrada, recibirás un mensaje con el enlace de recuperación en los próximos minutos.</p>
+    <p style="margin-top:10px;font-size:13px;color:#999">No olvides revisar la carpeta de <strong>spam</strong>.</p>
+    <a href="{% url 'login' %}">← Volver al inicio de sesión</a>
+  </div>
+</body>
+</html>

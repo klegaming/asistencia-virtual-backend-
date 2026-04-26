@@ -132,3 +132,18 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "web_ujap" / "static",
 ]
+
+SITE_NAME = "UJAP.online"
+ 
+# Configuración de email con Gmail
+# Antes de usar Gmail necesitás activar "Contraseñas de aplicación" en tu cuenta Google
+EMAIL_BACKEND     = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST        = 'smtp.gmail.com'
+EMAIL_PORT        = 587
+EMAIL_USE_TLS     = True
+EMAIL_HOST_USER   = 'kleivertorrealba704@gmail.com'       # <-- tu Gmail
+EMAIL_HOST_PASSWORD = 'jzmlxskfylseaxwq'          # <-- contraseña de aplicación (no tu clave normal)
+DEFAULT_FROM_EMAIL = '"UJAP.online" <kleivertorrealba704@gmail.com>'
+ 
+# Para probar sin enviar emails reales (los imprime en la consola del servidor):
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

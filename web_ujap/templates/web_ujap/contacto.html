@@ -7,20 +7,24 @@
     <title>Mensaje</title>
     <link rel="stylesheet" href="{% static 'web_ujap/css/contacto.css' %}">
     <link rel="icon" type="image/png" href="{% static 'web_ujap/images/download.png' %}">
+    <link rel="icon" href="{% static 'web_ujap/css/img/logo.ico' %}" type="image/x-icon">
 </head>
 <body>
 <nav class="navbar">
     <div class="nav-container">
         <a href="{% url 'login' %}" class="nav-logo">UJAP<span class="logo-red">.online</span></a>
         
+        <input type="checkbox" id="menu-toggle" class="menu-checkbox">
+        <label for="menu-toggle" class="menu-icon">&#9776;</label>
+        
         <ul class="nav-links">
             <li><a href="{% url 'login' %} ">Inicio</a></li>
             <li><a href="https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://ujap.edu.ve/facultades/&ved=2ahUKEwj5gZCBqeaTAxVh6ckDHVZNHFUQFnoECAsQAQ&usg=AOvVaw1k6UA0BosQSIZKMXeF-FGr">Facultades</a></li>
             <li><a href="https://aulavirtual.ujap.edu.ve/">Aula Virtual</a></li>
-
         </ul>
     </div>
 </nav>
+
 
 <form>  
     <h2>Formulario de contacto</h2>

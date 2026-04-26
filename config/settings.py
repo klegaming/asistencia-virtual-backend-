@@ -76,8 +76,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'db_ujap',
+        'USER': 'postgres',
+        'PASSWORD': 'Kleiver190408.', # La que pusiste al instalar
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 
@@ -123,7 +127,8 @@ from pathlib import Path
 
 STATIC_URL = 'static/'
 
+
 # Esta es la lista de carpetas donde Django buscará archivos estáticos adicionales
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'web_ujap', 'static'),
+    BASE_DIR / "web_ujap" / "static",
 ]

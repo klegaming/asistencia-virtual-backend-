@@ -1,19 +1,19 @@
 body {
-
+    /* Fondo con un tono crema/grisáceo suave de la UJAP */
     background-color: #f2f3f2; 
     font-family: sans-serif;
     margin: 0;
-    color: #333; 
+    color: #333; /* Texto oscuro para que se lea bien sobre el fondo claro */
     padding: 20px;
-    padding-top: 100px !important; 
+    padding-top: 100px !important; /* Para que el padding no se sume al padding-top que le damos al body para la navbar */
 }
 
 
 .navbar {
-    background-color: #336699; 
+    background-color: #336699; /* Azul UJAP */
     padding: 15px 0;
     width: 100%;
-    position: fixed; 
+    position: fixed; /* Para que se quede arriba al bajar */
     top: 0;
     left: 0;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
@@ -38,7 +38,7 @@ body {
 
 
 .nav-logo span {
-    color: #da1d3c; 
+    color: #da1d3c; /* Detalle en Rojo UJAP */
 }
 
 
@@ -54,10 +54,10 @@ body {
     transition: all 0.3s ease;
 }
 
-
+/* 3. El "Machetazo": Asegura el rojo cuando el mouse está sobre el logo completo */
 .nav-logo:hover .logo-red {
     color: #da1d3c !important;
-    text-shadow: 0 0 10px rgba(218, 29, 60, 0.3); 
+    text-shadow: 0 0 10px rgba(218, 29, 60, 0.3); /* Un brillo sutil para que resalte */
 }
 
 
@@ -80,7 +80,6 @@ body {
 
 .nav-links a:hover {
     color: #EEDDAD; /* Color crema UJAP al pasar el mouse */
-    transition: color 0.3s ease;
 }
 
 /* Botón especial en la navbar */
@@ -94,7 +93,6 @@ body {
 .nav-btn:hover {
     background-color: #b31630 !important;
     transform: scale(1.05);
-
 }
 
 
@@ -135,7 +133,7 @@ form {
     max-width: 500px;
     margin: auto;
     /* Sombra azul institucional para el glow */
-box-shadow: 0px 10px 100px rgba(10, 20, 40, 0.8);
+    box-shadow: 0px 10px 100px rgba(10, 20, 40, 0.8);
     margin-top: 50px;
     border-radius: 8px;
     border: 1px solid #da1d3c; 
@@ -230,5 +228,56 @@ input:-webkit-autofill:active {
 }
 
 
+.menu-checkbox {
+    display: none;
+}
 
+
+.menu-icon {
+    display: none;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    user-select: none;
+}
+
+
+@media (max-width: 768px) {
+
+    .menu-icon {
+        display: block;
+    }
+
+
+    .nav-links {
+        display: none; 
+        flex-direction: column; 
+        position: absolute;
+        top: 62px; 
+        left: 0;
+        width: 100%;
+        background-color: #336699; 
+        padding: 20px 0;
+        box-shadow: 0 10px 10px rgba(0,0,0,0.2);
+        gap: 15px; 
+        z-index: 999;
+    }
+
+
+    .nav-links li {
+        text-align: center;
+        width: 100%;
+    }
+
+
+    .nav-links a.nav-btn {
+        display: inline-block;
+        margin-top: 10px;
+    }
+
+
+    .menu-checkbox:checked ~ .nav-links {
+        display: flex;
+    }
+}
 

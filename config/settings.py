@@ -146,13 +146,13 @@ SITE_NAME = "UJAP.online"
  
 # Configuración de email con Gmail
 # Antes de usar Gmail necesitás activar "Contraseñas de aplicación" en tu cuenta Google
-EMAIL_BACKEND     = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST        = 'smtp.gmail.com'
-EMAIL_PORT        = 587
-EMAIL_USE_TLS     = True
-EMAIL_HOST_USER   = 'kleivertorrealba704@gmail.com'       # <-- tu Gmail
-EMAIL_HOST_PASSWORD = 'jzmlxskfylseaxwq'          # <-- contraseña de aplicación (no tu clave normal)
-DEFAULT_FROM_EMAIL = '"UJAP.online" <kleivertorrealba704@gmail.com>'
+EMAIL_BACKEND       = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST          = 'smtp.gmail.com'
+EMAIL_PORT          = 587
+EMAIL_USE_TLS       = True
+EMAIL_HOST_USER     = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL  = os.getenv('DEFAULT_FROM_EMAIL')
  
 # Para probar sin enviar emails reales (los imprime en la consola del servidor):
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

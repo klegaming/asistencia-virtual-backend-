@@ -130,3 +130,242 @@ def recuperar_confirmar_view(request, token):
 # ─── Otras vistas ─────────────────────────────────────────────────────────────
 def contacto_view(request):
     return render(request, 'web_ujap/contacto.html')
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.db.models import Count, Q, Avg
+from django.utils import timezone
+from datetime import timedelta, datetime
+from django.http import JsonResponse
+from .models import Estudiante, Materia, Horario, Asistencia
+
+
+#@login_required
+def dashboard_index(request):
+    """Vista principal del dashboard con estadísticas generales"""
+    
+    # Fecha actual y rangos
+    hoy = timezone.now().date()
+    inicio_semana = hoy - timedelta(days=hoy.weekday())
+    fin_semana = inicio_semana + timedelta(days=6)
+    inicio_mes = hoy.replace(day=1)
+    
+    # KPIs Principales
+    total_estudiantes = Estudiante.objects.filter(activo=True).count()
+    total_materias = Materia.objects.filter(activa=True).count()
+    
+    # Asistencias de hoy
+    asistencias_hoy = Asistencia.objects.filter(fecha=hoy)
+    total_asistencias_hoy = asistencias_hoy.count()
+    presentes_hoy = asistencias_hoy.filter(estado='presente').count()
+    ausentes_hoy = asistencias_hoy.filter(estado='ausente').count()
+    tardes_hoy = asistencias_hoy.filter(estado='tarde').count()
+    
+    # Porcentaje de asistencia hoy
+    porcentaje_asistencia_hoy = 0
+    if total_asistencias_hoy > 0:
+        porcentaje_asistencia_hoy = round((presentes_hoy / total_asistencias_hoy) * 100, 2)
+    
+    # Asistencias del mes
+    asistencias_mes = Asistencia.objects.filter(fecha__gte=inicio_mes, fecha__lte=hoy)
+    total_asistencias_mes = asistencias_mes.count()
+    ausencias_mes = asistencias_mes.filter(estado='ausente').count()
+    
+    # Estudiantes con más faltas (top 5)
+    estudiantes_faltas = Estudiante.objects.filter(activo=True).annotate(
+        total_faltas=Count('asistencias', filter=Q(asistencias__estado='ausente'))
+    ).order_by('-total_faltas')[:5]
+    
+    # Estudiantes con mejor asistencia (top 5)
+    estudiantes_mejor_asistencia = []
+    for estudiante in Estudiante.objects.filter(activo=True):
+        porcentaje = estudiante.calcular_porcentaje_asistencia()
+        if porcentaje > 0:
+            estudiantes_mejor_asistencia.append({
+                'estudiante': estudiante,
+                'porcentaje': porcentaje
+            })
+    estudiantes_mejor_asistencia = sorted(
+        estudiantes_mejor_asistencia, 
+        key=lambda x: x['porcentaje'], 
+        reverse=True
+    )[:5]
+    
+    # Materias con más ausencias
+    materias_ausencias = Materia.objects.filter(activa=True).annotate(
+        total_ausencias=Count('asistencias', filter=Q(asistencias__estado='ausente'))
+    ).order_by('-total_ausencias')[:5]
+    
+    # Horarios de hoy
+    dia_hoy = hoy.strftime('%A').lower()
+    dias_español = {
+        'monday': 'lunes',
+        'tuesday': 'martes',
+        'wednesday': 'miercoles',
+        'thursday': 'jueves',
+        'friday': 'viernes',
+        'saturday': 'sabado',
+        'sunday': 'domingo'
+    }
+    dia_hoy_español = dias_español.get(dia_hoy, 'lunes')
+    horarios_hoy = Horario.objects.filter(dia_semana=dia_hoy_español).order_by('hora_inicio')
+    
+    context = {
+        # KPIs
+        'total_estudiantes': total_estudiantes,
+        'total_materias': total_materias,
+        'presentes_hoy': presentes_hoy,
+        'ausentes_hoy': ausentes_hoy,
+        'tardes_hoy': tardes_hoy,
+        'porcentaje_asistencia_hoy': porcentaje_asistencia_hoy,
+        'ausencias_mes': ausencias_mes,
+        
+        # Listas
+        'estudiantes_faltas': estudiantes_faltas,
+        'estudiantes_mejor_asistencia': estudiantes_mejor_asistencia,
+        'materias_ausencias': materias_ausencias,
+        'horarios_hoy': horarios_hoy,
+        
+        # Fechas
+        'hoy': hoy,
+        'dia_hoy': dia_hoy_español,
+    }
+    
+    return render(request, 'dashboard/index.html', context)
+
+
+#@login_required
+def estadisticas_json(request):
+    """API endpoint para datos de gráficos en JSON"""
+    
+    tipo = request.GET.get('tipo', 'asistencias_semana')
+    
+    if tipo == 'asistencias_semana':
+        # Asistencias de los últimos 7 días
+        hoy = timezone.now().date()
+        datos = []
+        labels = []
+        
+        for i in range(6, -1, -1):
+            fecha = hoy - timedelta(days=i)
+            asistencias = Asistencia.objects.filter(fecha=fecha)
+            
+            presentes = asistencias.filter(estado='presente').count()
+            ausentes = asistencias.filter(estado='ausente').count()
+            tardes = asistencias.filter(estado='tarde').count()
+            
+            labels.append(fecha.strftime('%d/%m'))
+            
+            if i == 6:
+                datos = {
+                    'presentes': [presentes],
+                    'ausentes': [ausentes],
+                    'tardes': [tardes]
+                }
+            else:
+                datos['presentes'].append(presentes)
+                datos['ausentes'].append(ausentes)
+                datos['tardes'].append(tardes)
+        
+        return JsonResponse({
+            'labels': labels,
+            'datasets': [
+                {
+                    'label': 'Presentes',
+                    'data': datos['presentes'],
+                    'backgroundColor': 'rgba(75, 192, 192, 0.6)',
+                    'borderColor': 'rgba(75, 192, 192, 1)',
+                    'borderWidth': 2
+                },
+                {
+                    'label': 'Ausentes',
+                    'data': datos['ausentes'],
+                    'backgroundColor': 'rgba(255, 99, 132, 0.6)',
+                    'borderColor': 'rgba(255, 99, 132, 1)',
+                    'borderWidth': 2
+                },
+                {
+                    'label': 'Tardanzas',
+                    'data': datos['tardes'],
+                    'backgroundColor': 'rgba(255, 206, 86, 0.6)',
+                    'borderColor': 'rgba(255, 206, 86, 1)',
+                    'borderWidth': 2
+                }
+            ]
+        })
+    
+    elif tipo == 'estados_hoy':
+        # Distribución de estados hoy
+        hoy = timezone.now().date()
+        asistencias = Asistencia.objects.filter(fecha=hoy)
+        
+        presentes = asistencias.filter(estado='presente').count()
+        ausentes = asistencias.filter(estado='ausente').count()
+        tardes = asistencias.filter(estado='tarde').count()
+        justificados = asistencias.filter(estado='justificado').count()
+        
+        return JsonResponse({
+            'labels': ['Presentes', 'Ausentes', 'Tardanzas', 'Justificados'],
+            'datasets': [{
+                'data': [presentes, ausentes, tardes, justificados],
+                'backgroundColor': [
+                    'rgba(75, 192, 192, 0.8)',
+                    'rgba(255, 99, 132, 0.8)',
+                    'rgba(255, 206, 86, 0.8)',
+                    'rgba(54, 162, 235, 0.8)'
+                ],
+                'borderWidth': 2
+            }]
+        })
+    
+    elif tipo == 'asistencias_por_materia':
+        # Top 5 materias por asistencias
+        materias = Materia.objects.filter(activa=True).annotate(
+            total_asistencias=Count('asistencias')
+        ).order_by('-total_asistencias')[:5]
+        
+        labels = [m.nombre for m in materias]
+        datos = [m.total_asistencias for m in materias]
+        
+        return JsonResponse({
+            'labels': labels,
+            'datasets': [{
+                'label': 'Total Asistencias',
+                'data': datos,
+                'backgroundColor': 'rgba(153, 102, 255, 0.6)',
+                'borderColor': 'rgba(153, 102, 255, 1)',
+                'borderWidth': 2
+            }]
+        })
+    
+    return JsonResponse({'error': 'Tipo no válido'}, status=400)
+
+
+#@login_required
+def reporte_estudiante(request, estudiante_id):
+    """Vista de reporte individual de estudiante"""
+    
+    estudiante = Estudiante.objects.get(id=estudiante_id)
+    asistencias = estudiante.asistencias.all().order_by('-fecha')
+    
+    # Estadísticas del estudiante
+    total_asistencias = asistencias.count()
+    presentes = asistencias.filter(estado='presente').count()
+    ausentes = asistencias.filter(estado='ausente').count()
+    tardes = asistencias.filter(estado='tarde').count()
+    justificados = asistencias.filter(estado='justificado').count()
+    
+    porcentaje = estudiante.calcular_porcentaje_asistencia()
+    
+    context = {
+        'estudiante': estudiante,
+        'asistencias': asistencias[:20],  # Últimas 20
+        'total_asistencias': total_asistencias,
+        'presentes': presentes,
+        'ausentes': ausentes,
+        'tardes': tardes,
+        'justificados': justificados,
+        'porcentaje': porcentaje
+    }
+    
+    return render(request, 'dashboard/reporte_estudiante.html', context)

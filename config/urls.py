@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
 from web_ujap.views import (
     login_view,
     contacto_view,
@@ -32,4 +32,6 @@ urlpatterns = [
     path('recuperar/enviado/', recuperar_enviado_view, name='recuperar_enviado'),
     path('recuperar/confirmar/<str:token>/', recuperar_confirmar_view, name='recuperar_confirmar'),
     path('usuario/', usuario_view, name='usuario'),
+    path('dashboard/', include('web_ujap.urls')),  # Dashboard
 ]
+ 

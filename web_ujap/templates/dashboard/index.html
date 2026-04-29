@@ -1,0 +1,288 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+<!-- Header -->
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Dashboard de Asistencias</h1>
+    <p class="text-gray-600 mt-2">Resumen y estadísticas del día {{ hoy|date:"d/m/Y" }}</p>
+</div>
+
+<!-- KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Total Estudiantes -->
+    <div class="card stat-card rounded-lg shadow-lg p-6 text-white">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm opacity-90">Total Estudiantes</p>
+                <p class="text-4xl font-bold mt-2">{{ total_estudiantes }}</p>
+            </div>
+            <div class="bg-white bg-opacity-30 rounded-full p-4">
+                <i class="fas fa-users text-3xl"></i>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Presentes Hoy -->
+    <div class="card stat-card-green rounded-lg shadow-lg p-6 text-white">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm opacity-90">Presentes Hoy</p>
+                <p class="text-4xl font-bold mt-2">{{ presentes_hoy }}</p>
+                <p class="text-sm mt-1">{{ porcentaje_asistencia_hoy }}% de asistencia</p>
+            </div>
+            <div class="bg-white bg-opacity-30 rounded-full p-4">
+                <i class="fas fa-check-circle text-3xl"></i>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Ausentes Hoy -->
+    <div class="card stat-card-blue rounded-lg shadow-lg p-6 text-white">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm opacity-90">Ausentes Hoy</p>
+                <p class="text-4xl font-bold mt-2">{{ ausentes_hoy }}</p>
+            </div>
+            <div class="bg-white bg-opacity-30 rounded-full p-4">
+                <i class="fas fa-times-circle text-3xl"></i>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tardanzas Hoy -->
+    <div class="card stat-card-orange rounded-lg shadow-lg p-6 text-white">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm opacity-90">Tardanzas Hoy</p>
+                <p class="text-4xl font-bold mt-2">{{ tardes_hoy }}</p>
+            </div>
+            <div class="bg-white bg-opacity-30 rounded-full p-4">
+                <i class="fas fa-clock text-3xl"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gráficos -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Gráfico de Asistencias Semanal -->
+    <div class="card bg-white rounded-lg shadow-lg p-6">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">
+            <i class="fas fa-chart-line text-indigo-600 mr-2"></i>
+            Asistencias de los Últimos 7 Días
+        </h2>
+        <canvas id="chartAsistenciasSemana"></canvas>
+    </div>
+    
+    <!-- Gráfico de Estado Hoy -->
+    <div class="card bg-white rounded-lg shadow-lg p-6">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">
+            <i class="fas fa-chart-pie text-indigo-600 mr-2"></i>
+            Distribución de Estados Hoy
+        </h2>
+        <canvas id="chartEstadosHoy"></canvas>
+    </div>
+</div>
+
+<!-- Tablas de Datos -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Estudiantes con Más Faltas -->
+    <div class="card bg-white rounded-lg shadow-lg p-6">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">
+            <i class="fas fa-exclamation-triangle text-red-600 mr-2"></i>
+            Estudiantes con Más Faltas
+        </h2>
+        <div class="overflow-x-auto">
+            <table class="min-w-full">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Estudiante</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Matrícula</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Faltas</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for est in estudiantes_faltas %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-4 py-3 text-sm text-gray-900">{{ est.nombre_completo }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-600">{{ est.matricula }}</td>
+                        <td class="px-4 py-3 text-sm">
+                            <span class="{% if est.total_faltas > 5 %}text-red-600 font-bold{% else %}text-gray-900{% endif %}">
+                                {{ est.total_faltas }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="px-4 py-3 text-sm text-gray-500 text-center">No hay datos</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Estudiantes con Mejor Asistencia -->
+    <div class="card bg-white rounded-lg shadow-lg p-6">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">
+            <i class="fas fa-trophy text-yellow-600 mr-2"></i>
+            Estudiantes con Mejor Asistencia
+        </h2>
+        <div class="overflow-x-auto">
+            <table class="min-w-full">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Estudiante</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Matrícula</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">% Asistencia</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for item in estudiantes_mejor_asistencia %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-4 py-3 text-sm text-gray-900">{{ item.estudiante.nombre_completo }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-600">{{ item.estudiante.matricula }}</td>
+                        <td class="px-4 py-3 text-sm">
+                            <span class="text-green-600 font-bold">{{ item.porcentaje }}%</span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="px-4 py-3 text-sm text-gray-500 text-center">No hay datos</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Horarios de Hoy -->
+<div class="card bg-white rounded-lg shadow-lg p-6 mb-8">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">
+        <i class="fas fa-calendar-day text-indigo-600 mr-2"></i>
+        Horarios de Hoy ({{ dia_hoy|title }})
+    </h2>
+    <div class="overflow-x-auto">
+        <table class="min-w-full">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Hora</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Materia</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Profesor</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase">Aula</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                {% for horario in horarios_hoy %}
+                <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-3 text-sm text-gray-900 font-medium">
+                        {{ horario.hora_inicio|time:"H:i" }} - {{ horario.hora_fin|time:"H:i" }}
+                    </td>
+                    <td class="px-4 py-3 text-sm text-gray-900">{{ horario.materia.nombre }}</td>
+                    <td class="px-4 py-3 text-sm text-gray-600">{{ horario.profesor }}</td>
+                    <td class="px-4 py-3 text-sm text-gray-600">{{ horario.aula }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="px-4 py-3 text-sm text-gray-500 text-center">No hay clases programadas hoy</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Materias con Más Ausencias -->
+<div class="card bg-white rounded-lg shadow-lg p-6">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">
+        <i class="fas fa-book-open text-indigo-600 mr-2"></i>
+        Materias con Más Ausencias
+    </h2>
+    <canvas id="chartMaterias"></canvas>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Configuración global de Chart.js
+    Chart.defaults.font.family = 'Inter';
+    Chart.defaults.color = '#4B5563';
+    
+    // Gráfico de Asistencias Semanales
+    fetch('{% url "dashboard:estadisticas_json" %}?tipo=asistencias_semana')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('chartAsistenciasSemana');
+            new Chart(ctx, {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    
+    // Gráfico de Estados Hoy
+    fetch('{% url "dashboard:estadisticas_json" %}?tipo=estados_hoy')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('chartEstadosHoy');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        });
+    
+    // Gráfico de Materias
+    fetch('{% url "dashboard:estadisticas_json" %}?tipo=asistencias_por_materia')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('chartMaterias');
+            new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+</script>
+{% endblock %}

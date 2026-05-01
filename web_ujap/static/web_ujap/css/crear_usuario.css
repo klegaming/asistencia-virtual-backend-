@@ -1,260 +1,216 @@
-/* --- CONFIGURACIÓN BASE --- */
-body {
-    background-color: #f2f3f2; 
-    font-family: sans-serif;
+* {
     margin: 0;
-    color: #333;
-    padding: 20px;
-    padding-top: 100px !important; 
-}
-
-/* --- BARRA DE NAVEGACIÓN --- */
-.navbar {
-    background-color: #336699; 
-    padding: 15px 0;
-    width: 100%;
-    position: fixed; 
-    top: 0;
-    left: 0;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    z-index: 1000;
-}
-
-.nav-container {
-    max-width: 1100px;
-    margin: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-}
-
-.nav-logo {
-    color: white;
-    font-size: 24px;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.logo-red {
-    color: #da1d3c !important; 
-}
-
-.nav-logo:hover .logo-red {
-    color: #da1d3c !important;
-    text-shadow: 0 0 10px rgba(218, 29, 60, 0.3);
-}
-
-.nav-links {
-    list-style: none;
-    display: flex;
-    gap: 25px;
-    margin: 0;
-    align-items: center;
-}
-
-.nav-links a {
-    color: white;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.nav-links a:hover {
-    color: #EEDDAD !important;
-}
-
-/* --- ESTILO BOTÓN INICIO (PARA CONTACTO Y REGISTRO) --- */
-.nav-links li:first-child a {
-    background-color: #da1d3c; 
-    border: 1px solid #EEDDAD;
-    padding: 8px 18px;
-    border-radius: 5px;
-    transition: all 0.3s ease !important;
-}
-
-.nav-links li:first-child a:hover {
-    background-color: #b31630 !important;
-    transform: scale(1.05);
-    box-shadow: 0 0 10px rgba(238, 221, 173, 0.4);
-}
-
-.nav-btn {
-    background-color: #da1d3c;
-    border: 1px solid #EEDDAD;
-    padding: 8px 18px;
-    border-radius: 5px;
-}
-
-/* --- FORMULARIO --- */
-h2 {
-    text-align: center;
-    color: #336699;
-    text-shadow: 2px 2px 0px #EEDDAD; 
-    font-size: 40px;
-}
-
-form {
-    background-color: #eeeeee75;
-    padding: 20px;
-    max-width: 500px;
-    margin: auto;
-    border-radius: 8px;
-    box-shadow: 0px 20px 50px rgba(196, 33, 33, 0.6);
-    border-top: 8px solid #336699; 
-    border-bottom: 4px solid #EEDDAD; 
-}
-
-fieldset {
-    border: 2px solid #EEDDAD;
-    padding: 15px;
-    margin-bottom: 15px;
-    border-radius: 8px;
-}
-
-legend {
-    color: #da1d3c;
-    font-weight: bold;
-    padding: 0 10px;
-}
-
-input, select {
-    width: 100%;
+    padding: 0;
     box-sizing: border-box;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    outline: none;
 }
 
-input:focus {
-    border: 2px solid #336699;
-    box-shadow: 0 0 8px rgba(238, 221, 173, 0.5);
-}
-
-label {
-    display: block;
-    margin-bottom: 5px;
-    color: #336699;
-    font-weight: bold;
-    font-size: 13px;
-}
-
-.btn-submit {
-    background: linear-gradient(135deg, #336699 0%, #254d73 100%);
-    color: white;
-    border: 1px solid #EEDDAD;
-    padding: 15px;
-    width: 100%;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-submit:hover {
-    background: #da1d3c;
-    transform: translateY(-2px);
-}
-
-a {
-    color: #da1d3c;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-/* Contenedor principal de mensajes */
-.messages-container {
-    max-width: 500px; /* Ajustado al ancho de tu form */
-    margin: 20px auto;
-    padding: 0 10px;
-}
-
-/* Estilo general de la alerta */
-.alert {
-    padding: 15px 20px;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 14px;
-    text-align: center;
+body {
+    background-color: #0a0a0a;
+    color: #ffffff;
+    font-family: 'Segoe UI', sans-serif;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    animation: slideDown 0.5s ease-out; /* Animación de entrada */
-}
-
-/* Estilo específico para errores (Rojo UJAP suave) */
-/* Esto asegura que funcione si Django manda 'error' o 'danger' */
-.alert-error, .alert-danger {
-    background-color: #fce4e4; 
-    color: #da1d3c;           
-    border: 1px solid #da1d3c;
-    box-shadow: 0 4px 15px rgba(218, 29, 60, 0.1);
 }
 
 
-/* Animación para que no aparezca de golpe */
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.btn-volver {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    color: #888;
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
 }
 
-/*-----------  RESPONSIVE NAVBAR ----------- */
-.menu-checkbox {
-    display: none;
+.btn-volver:hover {
+    color: #fff;
+}
+
+.container {
+    width: 100%;
+    max-width: 460px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+/* Marca AURA */
+.brand {
+    text-align: center;
+}
+
+.brand h1 {
+    font-size: 2.2rem;
+    font-weight: 300;
+    letter-spacing: 0.5em;
+    color: #ffffff;
+}
+
+.brand span {
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: #666;
+}
+
+/* Card */
+.card {
+    width: 100%;
+    background-color: #111111;
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px; /* ← antes era 16px */
+}
+
+/* Campos */
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.field-group label {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: #888;
+    margin-top: 8px; /* ← agrega esto */
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.icon-left {
+    position: absolute;
+    left: 12px;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.icon-right {
+    position: absolute;
+    right: 12px;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.input-wrapper input,
+.input-wrapper select {
+    width: 100%;
+    background-color: #1e1e1e;  /* ← fondo oscuro */
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 12px 40px;
+    font-size: 0.95rem;
+    color: #ffffff;  /* ← texto blanco */
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input-wrapper input:focus,
+.input-wrapper select:focus {
+    background-color: #1e1e1e;  /* ← mantiene el color oscuro al escribir */
+    border-color: #3b5bdb;      /* ← borde azul al enfocar */
+}
+
+.input-wrapper input::placeholder {
+    color: #555;  /* ← placeholder gris */
 }
 
 
-.menu-icon {
-    display: none;
+/* Botón */
+.btn-submit {
+    width: 100%;
+    background-color: #3b5bdb;
     color: white;
-    font-size: 28px;
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
     cursor: pointer;
-    user-select: none;
+    transition: background-color 0.2s;
+    margin-top: 20px;
+}
+
+.btn-submit:hover {
+    background-color: #2f4ac4;
+}
+
+/* Divisor */
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.divider .line {
+    flex: 1;
+    height: 1px;
+    background-color: #2a2a2a;
+}
+
+.divider .text {
+    color: #555;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+}
+
+/* Links */
+.auth-links {
+    text-align: center;
+}
+
+.link-center {
+    color: #888;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.link-center:hover {
+    color: #fff;
+}
+
+/* Error */
+.error-msg {
+    color: #e74c3c;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+/* Footer */
+.footer-text {
+    color: #333;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
 }
 
 
-@media (max-width: 768px) {
+/* Eliminar el fondo blanco del autocompletado */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active  {
+    -webkit-box-shadow: 0 0 0 30px #1a1a20 inset !important;
+    -webkit-text-fill-color: white !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
 
-    .menu-icon {
-        display: block;
-    }
-
-
-    .nav-links {
-        display: none; 
-        flex-direction: column; 
-        position: absolute;
-        top: 62px; 
-        left: 0;
-        width: 100%;
-        background-color: #336699; 
-        padding: 20px 0;
-        box-shadow: 0 10px 10px rgba(0,0,0,0.2);
-        gap: 15px; 
-        z-index: 999;
-    }
-
-
-    .nav-links li {
-        text-align: center;
-        width: 100%;
-    }
-
-
-    .nav-links a.nav-btn {
-        display: inline-block;
-        margin-top: 10px;
-    }
-
-
-    .menu-checkbox:checked ~ .nav-links {
-        display: flex;
-    }
+/* Para navegadores que no son webkit (Firefox) */
+input:autofill {
+    background-color: #1a1a20 !important;
+    color: white !important;
 }

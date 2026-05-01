@@ -1,0 +1,351 @@
+/* Variables de color y ajustes base */
+:root {
+    --primary-bg: #f3f4f6;
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
+    --nav-bg: #ffffff;
+    --card-bg: #ffffff;
+    --dark-blue: #0f172a;
+    --purple-light: #f5f3ff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: var(--primary-bg);
+    color: var(--text-main);
+    line-height: 1.6;
+}
+
+/* Navegación */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+    background-color: var(--nav-bg);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.logo {
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-icon {
+    background-color: var(--dark-blue);
+    color: white;
+    padding: 5px 8px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.btn-login {
+    background-color: var(--dark-blue);
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: inline-block;
+    text-decoration: none;  /* quita el subrayado */
+    cursor: pointer;
+    /* aquí deja los demás estilos que ya tenías */
+}
+
+
+.btn-login:hover {
+    background-color: #1e293b;
+}
+
+/* Hero Section con Parallax */
+.hero {
+    position: relative;
+    height: 70vh;
+    min-height: 500px;
+    /* Reemplaza la URL de abajo con una foto de la fachada de tu universidad */
+    background-image: url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* Esto crea el efecto parallax al hacer scroll */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 60px; /* Compensa la navbar fija */
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Oscurece la imagen para que el texto resalte */
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    color: white;
+    max-width: 800px;
+    padding: 0 20px;
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+/* Contenedor de Estadísticas (Tarjetas Flotantes) */
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    padding: 0 5%;
+    margin-top: -60px; /* Hace que suban y se monten sobre la imagen hero */
+    position: relative;
+    z-index: 10;
+}
+
+.stat-card {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    /* Sombra un poco más marcada para que "flote" */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15),
+                0 5px 15px rgba(0, 0, 0, 0.1); 
+    /* Borde muy fino para definir el límite del blanco */
+    border: 1px solid #e2e8f0; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stat-info h3 {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.stat-info p {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+}
+
+/* Colores de los iconos */
+.blue { background-color: #3b82f6; }
+.green { background-color: #22c55e; }
+.purple { background-color: #a855f7; }
+.orange { background-color: #f97316; }
+
+/* Sección Sobre el Proyecto */
+.about-project {
+    padding: 100px 5%;
+}
+
+.section-header {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 60px;
+}
+
+.section-header h2 {
+    font-size: 2.2rem;
+    margin-bottom: 15px;
+}
+
+.section-header p {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 30px;
+}
+
+.feature-card {
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    display: flex;
+    gap: 20px;
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+.feature-icon {
+    background: var(--dark-blue);
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    flex-shrink: 0;
+}
+
+.feature-text h4 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.feature-text p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+/* Sección Acerca de la Universidad */
+.about-university {
+    background-color: #ffffff; 
+    padding: 80px 5%;
+}
+
+.university-content {
+    background-color: #f5f3ff;
+    border-radius: 20px;
+    padding: 60px 40px;
+    text-align: center;
+}
+
+.university-content h2 {
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+}
+
+.university-content > p {
+    color: var(--text-muted);
+    max-width: 800px;
+    margin: 0 auto 50px;
+    font-size: 1.1rem;
+}
+
+.uni-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 30px;
+    border-top: 1px solid rgba(0,0,0,0.05);
+    padding-top: 40px;
+}
+
+.uni-stat-item h4 {
+    font-size: 2.5rem;
+    color: var(--text-main);
+    margin-bottom: 5px;
+}
+
+.uni-stat-item p {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 30px;
+    background-color: white;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+    
+    .stats-container {
+        margin-top: -30px;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .feature-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .university-content {
+        padding: 40px 20px;
+    }
+}
+
+
+.stat-card, .feature-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    cursor: pointer;
+}
+
+
+.stat-card:hover, .feature-card:hover {
+
+    transform: translateY(-10px); 
+    
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3); 
+    
+    border-color: rgba(0, 0, 0, 0.15); 
+}
+
+/* Eliminar el fondo blanco del autocompletado */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active  {
+    -webkit-box-shadow: 0 0 0 30px #1a1a20 inset !important;
+    -webkit-text-fill-color: white !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Para navegadores que no son webkit (Firefox) */
+input:autofill {
+    background-color: #1a1a20 !important;
+    color: white !important;
+}

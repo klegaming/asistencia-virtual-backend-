@@ -1,67 +1,84 @@
-<!DOCTYPE html>
 {% load static %}
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mensaje</title>
+    <title>AURA | Soporte Técnico</title>
+    <!-- Font Awesome para los iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Enlace a tu CSS externo -->
     <link rel="stylesheet" href="{% static 'web_ujap/css/contacto.css' %}">
-    <link rel="icon" type="image/png" href="{% static 'web_ujap/images/download.png' %}">
-    <link rel="icon" href="{% static 'web_ujap/css/img/logo.ico' %}" type="image/x-icon">
 </head>
 <body>
-<nav class="navbar">
-    <div class="nav-container">
-        <a href="{% url 'login' %}" class="nav-logo">UJAP<span class="logo-red">.online</span></a>
-        
-        <input type="checkbox" id="menu-toggle" class="menu-checkbox">
-        <label for="menu-toggle" class="menu-icon">&#9776;</label>
-        
-        <ul class="nav-links">
-            <li><a href="{% url 'login' %} ">Inicio</a></li>
-            <li><a href="https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://ujap.edu.ve/facultades/&ved=2ahUKEwj5gZCBqeaTAxVh6ckDHVZNHFUQFnoECAsQAQ&usg=AOvVaw1k6UA0BosQSIZKMXeF-FGr">Facultades</a></li>
-            <li><a href="https://aulavirtual.ujap.edu.ve/">Aula Virtual</a></li>
-        </ul>
-    </div>
-</nav>
 
+    <!-- Navbar sincronizado con AURA -->
+    <nav>
+        <div class="nav-inner">
+            <a href="{% url 'home' %}" class="nav-brand">
+                A U R A <span>ASISTENCIA</span>
+            </a>
+            
+            <div class="nav-tabs">
+                <a href="{% url 'home' %}" class="nav-tab">INICIO</a>
+                <!-- Marcamos SOPORTE como activa -->
+                <div class="nav-tab active">SOPORTE</div>
+                
+                <form action="{% url 'logout' %}" method="post" class="logout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">
+                        <i class="fa-solid fa-power-off"></i> SALIR
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
 
-<form>  
-    <h2>Formulario de contacto</h2>
-    <fieldset>
-        <legend>Información Personal</legend>
-<div class="form_input"> 
-    <label for="nombre">Nombre</label>
-    <input class="text" placeholder="Kleiver Torrealba" id="nombre"> 
-</div>
-<div class="form_input">
-    <label for="email">Email</label>
-    <input class="email" placeholder="Example@gmail.com" id="email"> 
-</div>
-</fieldset>
-<div class="form_input">
-    <label>tipo de usuario
-        <select name="tipo_usuario" id="tipo_usuario">
-            <option value="estudiante">Estudiante</option>
-            <option value="profesor">Profesor</option>
-            <option value="otro">Otro</option>
-        </select>
-    </label>
-</div>
-<div class="form_input">
-    <label for="mensaje">Mensaje</label>            
+    <!-- Contenedor del Formulario -->
+    <main class="container">
+        <div class="aura-card">
+            <div class="card-header">
+                <i class="fa-solid fa-envelope-open-text"></i>
+                <h2>Ticket de Soporte</h2>
+            </div>
+            
+            <p class="card-subtitle">Reporta fallas técnicas o solicita asistencia con la plataforma.</p>
 
-<textarea name="mensaje" placeholder="Escriba su mensaje..." id="mensaje"></textarea>
+            <form action="" method="POST">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label>Nombre Completo</label>
+                    <input type="text" name="nombre" value="Kleiver Torrealba" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Correo Institucional</label>
+                    <input type="email" name="email" value="Example@gmail.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Tipo de Usuario</label>
+                    <div class="select-wrapper">
+                        <select name="tipo_usuario" required>
+                            <option value="estudiante">Estudiante</option>
+                            <option value="profesor">Profesor</option>
+                            <option value="admin">Administrativo</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Descripción del Problema</label>
+                    <textarea name="mensaje" rows="5" placeholder="Escribe tu mensaje aquí..." required></textarea>
+                </div>
+                
+                <button type="submit" class="si-btn">
+                    ENVIAR REPORTE <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+    </main>
 
-
-
-
-</label> 
-</div>
-
-<div class="form_input">
-    <button type="submit" class="btn-submit">Enviar</button>
 </body>
-
-</form>
 </html>

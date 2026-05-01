@@ -1,283 +1,276 @@
-body {
-    /* Fondo con un tono crema/grisáceo suave de la UJAP */
-    background-color: #f2f3f2; 
-    font-family: sans-serif;
+/* Importamos la fuente 'Inter' para ese toque moderno y limpio */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+/* --- ESTILOS GLOBALES --- */
+* {
     margin: 0;
-    color: #333; /* Texto oscuro para que se lea bien sobre el fondo claro */
-    padding: 20px;
-    padding-top: 100px !important; /* Para que el padding no se sume al padding-top que le damos al body para la navbar */
-}
-
-
-.navbar {
-    background-color: #336699; /* Azul UJAP */
-    padding: 15px 0;
-    width: 100%;
-    position: fixed; /* Para que se quede arriba al bajar */
-    top: 0;
-    left: 0;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    z-index: 1000;
-}
-
-.nav-container {
-    max-width: 1100px;
-    margin: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-}
-
-.nav-logo {
-    color: white;
-    font-size: 24px;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-
-.nav-logo span {
-    color: #da1d3c; /* Detalle en Rojo UJAP */
-}
-
-
-/* 1. Mantenemos el UJAP (texto blanco) siempre blanco en hover */
-.nav-logo:hover {
-    color: white !important;
-    text-decoration: none;
-}
-
-/* 2. Forzamos que el .online se quede rojo siempre */
-.logo-red {
-    color: #da1d3c !important; /* Rojo UJAP */
-    transition: all 0.3s ease;
-}
-
-/* 3. El "Machetazo": Asegura el rojo cuando el mouse está sobre el logo completo */
-.nav-logo:hover .logo-red {
-    color: #da1d3c !important;
-    text-shadow: 0 0 10px rgba(218, 29, 60, 0.3); /* Un brillo sutil para que resalte */
-}
-
-
-
-.nav-links {
-    list-style: none;
-    display: flex;
-    gap: 25px;
-    margin: 0;
-}
-
-.nav-links a {
-    color: white;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 16px;
-    transition: color 0.3s ease;
-    border: none; /* Quitamos el borde que le pusimos a los links del form */
-}
-
-.nav-links a:hover {
-    color: #EEDDAD; /* Color crema UJAP al pasar el mouse */
-}
-
-/* Botón especial en la navbar */
-.nav-btn {
-    background-color: #da1d3c;
-    padding: 8px 18px;
-    border-radius: 5px;
-    transition: transform 0.3s ease !important;
-}
-
-.nav-btn:hover {
-    background-color: #b31630 !important;
-    transform: scale(1.05);
-}
-
-
-
-
-
-
-
-
-h2 {
-    text-align: center;
-    /* Azul institucional UJAP */
-    color: #336699; 
-    text-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-    padding: 20px;
-    font-size: 45px; /* Lo bajé un pelo para que quepa mejor */
-    border: 3px solid #336699;
-    border-radius: 8px; 
-}
-
-input, select {
-    width: 100%;
+    padding: 0;
     box-sizing: border-box;
-    display: block;
-    padding: 15px;
-    border: 1px solid #ccc;
-    /* Sombra suave azulada */
-    box-shadow: 0 0 10px rgba(51, 102, 153, 0.1);
-    background-color: white;
-    border-radius: 4px;
-    color: #333;
-    outline: none;
+    font-family: 'Inter', sans-serif;
 }
 
-form {
-    background-color: white;
-    padding: 10px;
-    max-width: 500px;
-    margin: auto;
-    /* Sombra azul institucional para el glow */
-    box-shadow: 0px 10px 100px rgba(10, 20, 40, 0.8);
-    margin-top: 50px;
-    border-radius: 8px;
-    border: 1px solid #da1d3c; 
-    border-top: 6px solid #da1d3c; 
-}
-
-.form_input {
-    padding: 10px 20px;
-}
-
-label {
-    display: block;
-    margin-bottom: 5px;
-    color: #336699; 
-    font-size: 16px;
-    font-weight: bold;
+body {
+    background: radial-gradient(circle at center, #1a1a24 0%, #09090b 100%);
+    color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 }
 
 a {
-    /* Rojo institucional para los links */
-    color: #da1d3c; 
     text-decoration: none;
-    border-bottom: 1px solid #da1d3c;
+    transition: color 0.3s ease;
 }
 
-a:hover {
-    color: #336699;
-    border-bottom: 1px solid #336699;
+/* --- BARRA SUPERIOR (Botón Volver) --- */
+.top-bar {
+    position: absolute;
+    top: 30px;
+    right: 40px;
 }
 
-/* Ajuste del autocompletado para fondo claro */
+.btn-back {
+    color: #8a8a93;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-back:hover {
+    color: #ffffff;
+}
+
+/* --- CONTENEDOR PRINCIPAL --- */
+.login-container {
+    width: 100%;
+    max-width: 420px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* --- ENCABEZADO AURA --- */
+.brand-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.brand-title {
+    font-size: 2.8rem;
+    font-weight: 300;
+    letter-spacing: 16px; /* Separación amplia de letras */
+    margin-right: -16px; /* Compensa el letter-spacing extra al final */
+    margin-bottom: 8px;
+}
+
+.brand-subtitle {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #6b7280;
+    letter-spacing: 2px;
+}
+
+/* --- CAJA DEL FORMULARIO --- */
+.login-box {
+    background-color: #121216; /* Fondo casi negro */
+    border: 1px solid #22222a; /* Borde muy sutil */
+    border-radius: 16px;
+    padding: 40px 35px;
+    width: 100%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* --- INPUTS --- */
+.input-group {
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #8a8a93;
+    margin-bottom: 8px;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: #1a1a20;
+    border: 1px solid #2a2a35;
+    border-radius: 8px;
+    transition: border-color 0.3s;
+}
+
+.input-wrapper:focus-within {
+    border-color: #3b82f6; /* Borde azul al hacer click */
+}
+
+.input-wrapper input {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    width: 100%;
+    padding: 14px 40px; /* Espacio para los iconos */
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.input-wrapper input::placeholder {
+    color: #52525e;
+}
+
+.icon-left {
+    position: absolute;
+    left: 15px;
+    color: #52525e;
+    font-size: 1rem;
+}
+
+.icon-right {
+    position: absolute;
+    right: 15px;
+    color: #52525e;
+    font-size: 1rem;
+}
+
+.icon-right:hover {
+    color: #ffffff;
+}
+
+/* --- CHECKBOX --- */
+.remember-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.remember-group input[type="checkbox"] {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background-color: #1a1a20;
+    border: 1px solid #3f3f4e;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+}
+
+.remember-group input[type="checkbox"]:checked {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+}
+
+.remember-group input[type="checkbox"]:checked::after {
+    content: '✔';
+    position: absolute;
+    color: white;
+    font-size: 10px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.remember-group label {
+    font-size: 0.85rem;
+    color: #8a8a93;
+    cursor: pointer;
+}
+
+/* --- BOTÓN SIGN IN --- */
+.btn-signin {
+    width: 100%;
+    background-color: #2563eb; /* Azul primario */
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 30px;
+}
+
+.btn-signin:hover {
+    background-color: #1d4ed8;
+}
+
+/* --- DIVISOR "OR" --- */
+.divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.divider .line {
+    height: 1px;
+    flex-grow: 1;
+    background-color: #2a2a35;
+}
+
+.divider .text {
+    padding: 0 15px;
+    color: #52525e;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* --- ENLACES INFERIORES --- */
+.auth-links {
+    display: flex;
+    justify-content: space-between;
+}
+
+.auth-links a {
+    font-size: 0.85rem;
+    color: #8a8a93;
+    font-weight: 500;
+}
+
+.auth-links a:hover {
+    color: #ffffff;
+}
+
+/* --- FOOTER --- */
+.footer-text {
+    margin-top: 40px;
+    font-size: 0.75rem;
+    color: #52525e;
+    text-align: center;
+}
+
+/* Eliminar el fondo blanco del autocompletado */
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 
 input:-webkit-autofill:focus, 
-input:-webkit-autofill:active {
-    -webkit-text-fill-color: #333 !important;
-    -webkit-box-shadow: 0 0 0px 500px #ffffff inset !important;   
-    border: 1px solid #336699 !important;
+input:-webkit-autofill:active  {
+    -webkit-box-shadow: 0 0 0 30px #1a1a20 inset !important;
+    -webkit-text-fill-color: white !important;
+    transition: background-color 5000s ease-in-out 0s;
 }
 
-.btn-submit {
-    width: 100%;
-    padding: 12px;
-    margin-top: 20px;
-    /* Botón azul principal */
-    background-color: #336699;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
+/* Para navegadores que no son webkit (Firefox) */
+input:autofill {
+    background-color: #1a1a20 !important;
+    color: white !important;
 }
 
-.btn-submit:hover {
-
-    background-color: #da1d3c;
-    box-shadow: 0 0 20px rgba(218, 29, 60, 0.3);
-    transform: translateY(-2px); 
+/* Forzar que el fondo del autocompletado respete las esquinas redondeadas */
+input:-webkit-autofill {
+    border-radius: 8px !important; /* Ajusta este valor al radio de tus otros inputs */
 }
 
-.btn-submit:active {
-    transform: translateY(0);
+/* Asegurar que el contenedor padre no deje ver desbordamientos */
+.input-wrapper {
+    overflow: hidden !important;
 }
-
-
-.checkbox{
-    width: auto;
-    display: inline-block;
-    margin-left: 10px;
-    
-}
-
-.form_recover {
-    text-align: center; /* Centra el link si quieres */
-    margin-top: 15px;   /* Le da aire respecto al botón */
-}
-
-.form_recover a {
-    color: #da1d3c;      /* Rojo UJAP */
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: bold;
-    border-bottom: 1px solid transparent; /* Para el efecto hover */
-    transition: all 0.3s ease;
-}
-
-.form_recover a:hover {
-    color: #336699;      /* Cambia a Azul UJAP al pasar el mouse */
-    border-bottom: 1px solid #336699;
-}
-
-
-.menu-checkbox {
-    display: none;
-}
-
-
-.menu-icon {
-    display: none;
-    color: white;
-    font-size: 28px;
-    cursor: pointer;
-    user-select: none;
-}
-
-
-@media (max-width: 768px) {
-
-    .menu-icon {
-        display: block;
-    }
-
-
-    .nav-links {
-        display: none; 
-        flex-direction: column; 
-        position: absolute;
-        top: 62px; 
-        left: 0;
-        width: 100%;
-        background-color: #336699; 
-        padding: 20px 0;
-        box-shadow: 0 10px 10px rgba(0,0,0,0.2);
-        gap: 15px; 
-        z-index: 999;
-    }
-
-
-    .nav-links li {
-        text-align: center;
-        width: 100%;
-    }
-
-
-    .nav-links a.nav-btn {
-        display: inline-block;
-        margin-top: 10px;
-    }
-
-
-    .menu-checkbox:checked ~ .nav-links {
-        display: flex;
-    }
-}
-

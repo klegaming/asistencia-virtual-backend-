@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Asistencia Virtual</title>
+    <!-- Fuentes e Íconos -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'web_ujap/css/home.css' %}">
+</head>
+<body>
+
+    <!-- Barra de Navegación -->
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-icon">AURA</span> Control de Asistencia
+        </div>
+        <a href="{% url 'login' %}" class="btn-login">Iniciar Sesión</a>
+        
+    </nav>
+
+    <!-- Sección Hero con Parallax -->
+    <header class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>Sistema de Asistencia Virtual UJAP</h1>
+            <p>Plataforma inteligente diseñada para el control, registro y monitoreo de la asistencia estudiantil en el campus de San Diego, Carabobo.</p>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main>
+        <!-- Tarjetas de Estadísticas (Superpuestas) -->
+        <section class="stats-container">
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>Total Estudiantes</h3>
+                    <p>19,000+</p>
+                </div>
+                <div class="stat-icon blue"><i class="fa-solid fa-users"></i></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>Sesiones Activas</h3>
+                    <p>1,245</p>
+                </div>
+                <div class="stat-icon green"><i class="fa-solid fa-user-check"></i></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>Facultades</h3>
+                    <p>5</p>
+                </div>
+                <div class="stat-icon purple"><i class="fa-solid fa-graduation-cap"></i></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>Aulas Registradas</h3>
+                    <p>120</p>
+                </div>
+                <div class="stat-icon orange"><i class="fa-solid fa-arrow-trend-up"></i></div>
+            </div>
+        </section>
+
+        <!-- Sobre el Proyecto -->
+        <section class="about-project">
+            <div class="section-header">
+                <h2>Sobre el Proyecto</h2>
+                <p>Nuestra plataforma de asistencia virtual revoluciona la forma en que las universidades gestionan la presencia estudiantil, combinando tecnología de punta con facilidad de uso.</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-clock"></i></div>
+                    <div class="feature-text">
+                        <h4>Registro en Tiempo Real</h4>
+                        <p>Sistema automatizado que registra la asistencia instantáneamente mediante códigos QR o biometría facial.</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div class="feature-text">
+                        <h4>Seguridad y Privacidad</h4>
+                        <p>Protección de datos estudiantiles con encriptación de última generación y cumplimiento GDPR.</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-chart-simple"></i></div>
+                    <div class="feature-text">
+                        <h4>Análisis Detallado</h4>
+                        <p>Reportes completos y estadísticas sobre patrones de asistencia para tomar mejores decisiones.</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-mobile-screen"></i></div>
+                    <div class="feature-text">
+                        <h4>Acceso Móvil</h4>
+                        <p>Aplicación disponible para iOS y Android, permitiendo gestión desde cualquier dispositivo.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Acerca de la Universidad -->
+        <section class="about-university">
+            <div class="university-content">
+                <h2>Acerca de nuestra Alma Mater</h2>
+                <p>Ubicada en San Diego, estado Carabobo, la Universidad José Antonio Páez se dedica a formar profesionales capaces de comprender y transformar la sociedad desde una perspectiva ética, democrática y solidaria. Este sistema de asistencia virtual forma parte de la visión de innovación académica, facilitando la gestión diaria de nuestra amplia comunidad de estudiantes y docentes.</p>
+                
+                <div class="uni-stats">
+                    <div class="uni-stat-item">
+                        <h4>28+</h4>
+                        <p>Años de trayectoria</p>
+                    </div>
+                    <div class="uni-stat-item">
+                        <h4>5</h4>
+                        <p>Facultades</p>
+                    </div>
+                    <div class="uni-stat-item">
+                        <h4>26,700</h4>
+                        <p>Profesioanales Egresados</p>
+                    </div>
+                    <div class="uni-stat-item">
+                        <h4>100%</h4>
+                        <p>Innovación Digital</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Pie de página -->
+    <footer>
+        <p>&copy; 2026 Universidad José Antonio Páez. Sistema de Control de Asistencia Virtual.</p>
+    </footer>
+
+</body>
+</html>

@@ -17,21 +17,27 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from web_ujap.views import (
+    home_view,
     login_view,
     contacto_view,
     recuperar_view,
     recuperar_enviado_view,
     recuperar_confirmar_view,
     usuario_view,
+    pagina_view,
+    logout_view
 ) 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', login_view, name='login'),
+    path('', home_view, name='home'),
+    path('login/', login_view, name='login'),
     path('contacto/', contacto_view, name='contacto'),
     path('recuperar/', recuperar_view, name='recuperar'),
     path('recuperar/enviado/', recuperar_enviado_view, name='recuperar_enviado'),
     path('recuperar/confirmar/<str:token>/', recuperar_confirmar_view, name='recuperar_confirmar'),
     path('usuario/', usuario_view, name='usuario'),
     path('dashboard/', include('web_ujap.urls')),  # Dashboard
+    path('pagina/', pagina_view, name='pagina'),
+    path('salir/', logout_view, name='logout'),
+
 ]
- 

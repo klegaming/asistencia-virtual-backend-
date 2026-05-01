@@ -1,53 +1,66 @@
-<!DOCTYPE html>
 {% load static %}
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recuperar Contraseña - UJAP.online</title>
-    <link rel="stylesheet" href="{% static 'web_ujap/css/recuperar.css' %}">
-    <link rel="icon" href="{% static 'web_ujap/css/img/logo.ico' %}" type="image/x-icon">
+    <title>AURA | Recuperar Contraseña</title>
+    
+    <!-- Usamos el MISMO CSS del login -->
+    <link rel="stylesheet" href="{% static 'web_ujap/css/login.css' %}">
+    
+    <!-- Font Awesome para los iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="{% url 'login' %}" class="nav-logo">UJAP<span class="logo-red">.online</span></a>
 
-<input type="checkbox" id="menu-toggle" class="menu-checkbox">
-        <label for="menu-toggle" class="menu-icon">&#9776;</label>
+    <div class="top-bar">
+        <a href="{% url 'login' %}" class="btn-back">
+            <i class="fa-solid fa-arrow-left"></i> Volver al Login
+        </a>
+    </div>
 
-            <ul class="nav-links">
-                <li><a href="{% url 'login' %}">Inicio</a></li>
-                <li><a href="https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://ujap.edu.ve/facultades/&ved=2ahUKEwj5gZCBqeaTAxVh6ckDHVZNHFUQFnoECAsQAQ&usg=AOvVaw1k6UA0BosQSIZKMXeF-FGr">Facultades</a></li>
-                <li><a href="https://aulavirtual.ujap.edu.ve/">Aula Virtual</a></li>
-                <li><a href="{% url 'contacto' %}" class="nav-btn">Contacto</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <form action="{% url 'recuperar' %}" method="POST">
-        {% csrf_token %}
-        <h2>Recuperar Contraseña</h2>
+    <div class="login-container">
         
-        <p style="text-align: center; color: #666; font-size: 14px; margin-bottom: 20px;">
-            Introduce tu correo  y te enviaremos las instrucciones para restablecer tu clave.
-        </p>
+        <div class="brand-header">
+            <h1 class="brand-title">A U R A</h1>
+            <p class="brand-subtitle">RECUPERAR CONTRASEÑA</p>
+        </div>
 
-        <fieldset>
-            <legend>Verificación</legend>
-            <div class="form_input">
-                <label for="email">Correo</label>
-                <input type="email" id="email" name="email" placeholder="example@gmail.com" required>
+        <div class="login-box">
+            <p style="color: #8a8a93; font-size: 0.85rem; text-align: center; margin-bottom: 25px;">
+                Introduce tu correo y te enviaremos las instrucciones para restablecer tu clave.
+            </p>
+
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="input-group">
+                    <label for="email">CORREO ELECTRÓNICO</label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-envelope icon-left"></i>
+                        <input type="email" id="email" name="email" placeholder="example@gmail.com" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-signin">ENVIAR INSTRUCCIONES</button>
+            </form>
+
+            <div class="divider">
+                <span class="line"></span>
+                <span class="text">O</span>
+                <span class="line"></span>
             </div>
-        </fieldset>
 
-        <div class="form_input">
-            <button type="submit" class="btn-submit">Enviar Instrucciones</button>
+            <div class="auth-links" style="justify-content: center;">
+                <a href="{% url 'login' %}">¿Recordaste tu clave? Inicia sesión</a>
+            </div>
         </div>
 
-        <div style="text-align: center; margin-top: 15px;">
-            <a href="../login/login.html">Volver al inicio de sesión</a>
+        <div class="footer-text">
+            Protected by advanced encryption
         </div>
-    </form>
+        
+    </div>
 </body>
 </html>

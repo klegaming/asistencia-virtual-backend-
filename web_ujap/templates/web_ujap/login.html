@@ -1,67 +1,104 @@
-<!DOCTYPE html>
 {% load static %}
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title class="title">S.A.V</title>
-    <link rel="stylesheet" href="{% static 'web_ujap/css/login.css' %}">
-    <link rel="icon" href="{% static 'web_ujap/css/img/logo.ico' %}" type="image/x-icon">
-</head>
-
-<body>
-<nav class="navbar">
-    <div class="nav-container">
-        <a href="{% url 'login' %}" class="nav-logo">UJAP<span class="logo-red">.online</span></a>
-
-        <input type="checkbox" id="menu-toggle" class="menu-checkbox">
-        <label for="menu-toggle" class="menu-icon">&#9776;</label>
-
-        <ul class="nav-links">
-            <li><a href="https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://ujap.edu.ve/facultades/&ved=2ahUKEwj5gZCBqeaTAxVh6ckDHVZNHFUQFnoECAsQAQ&usg=AOvVaw1k6UA0BosQSIZKMXeF-FGr">Facultades</a></li>
-            <li><a href="https://aulavirtual.ujap.edu.ve/">Aula Virtual</a></li>
-            <li><a href="{% url 'contacto' %}" class="nav-btn">Contacto</a></li>
-        <li>
-    <a href="/dashboard/" class="nav-btn">
-        📊 Ver Dashboard
-    </a>
-</li>
-        </ul>
-    </div>
-</nav>
-
-
-
-    <form method="POST">  
-        {% csrf_token %}
-    <h2>Universidad
-        Jose
-        Antonio
-        Paez
-    </h2>
-
-<div class="form_input"> 
-    <label for="nombre">Nombre</label>
-    <input class="text" placeholder="Kleiver Torrealba" id="nombre" name="usuario"> 
-</div>
-
-<div class="form_input">
-    <label for="password">Contraseña</label>
-    <input type="password" placeholder="********" id="password" name="password">
-</div>
-<button type="submit" class="btn-submit">Ingresar</button>
-
-<div class="form_recover">
-    <a href="{% url 'usuario' %}" target="_blank"> Crear usuario</a>
-</div>
-
-<div class="form_recover">
-    <a href="{% url 'recuperar' %}" target="_blank">¿Olvidaste tu contraseña?</a>
-</div>
-
-</body>
-</form>
+    <title>AURA | Asistencia</title>
     
+    <!-- Enlace a tu nuevo archivo CSS -->
+    <link rel="stylesheet" href="{% static 'web_ujap/css/login.css' %}">
+    
+    <!-- Font Awesome para los iconos del usuario, candado y el ojo -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
 
+    <!-- Botón de Volver (Arriba a la derecha) -->
+    <div class="top-bar">
+        <!-- Reemplaza 'home' con el nombre real de tu ruta principal si es distinto -->
+        <a href="{% url 'home' %}" class="btn-back">
+            <i class="fa-solid fa-arrow-left"></i> Volver
+        </a>
+    </div>
+
+    <div class="login-container">
+        
+        <!-- Encabezado AURA -->
+        <div class="brand-header">
+            <h1 class="brand-title">A U R A</h1>
+            <p class="brand-subtitle">ASISTENCIA</p>
+        </div>
+
+        <!-- Caja del Formulario -->
+        <div class="login-box">
+            <!-- Es vital el method="POST" para que funcione con Django -->
+            <form method="POST" action="">
+                {% csrf_token %}
+                
+                <!-- Campo: usuario -->
+                <div class="input-group">
+                    <label for="usuario">USUARIO</label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-user icon-left"></i>
+                        <input type="text" id="usuario" name="usuario" placeholder="introduzca su usuario" required>
+                    </div>
+                </div>
+
+                <!-- Campo: Password -->
+                <div class="input-group">
+                    <label for="password">PASSWORD</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock icon-left"></i>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                        <i class="fa-regular fa-eye icon-right" id="togglePassword" style="cursor: pointer;"></i>
+                    </div>
+                </div>
+
+                <!-- Checkbox: Remember me -->
+                <div class="remember-group">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Remember me</label>
+                </div>
+
+                <!-- Botón Sign In -->
+                <button type="submit" class="btn-signin">SIGN IN</button>
+            </form>
+
+            <!-- Divisor OR -->
+            <div class="divider">
+                <span class="line"></span>
+                <span class="text">OR</span>
+                <span class="line"></span>
+            </div>
+
+            <!-- Enlaces inferiores -->
+            <div class="auth-links">
+                <!-- Puedes cambiar el '#' por las rutas reales luego, ej: {% url 'usuario' %} -->
+                <a href="{% url 'usuario' %}" class="link-left">Create account</a>
+                <a href="{% url 'recuperar' %}" class="link-right">Forgot password?</a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-text">
+            Protected by advanced encryption
+        </div>
+        
+    </div>
+
+    <!-- Pequeño script opcional para que el "ojo" de la contraseña funcione -->
+    <script>
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+
+        togglePassword.addEventListener('click', function (e) {
+            // Cambia el tipo de input de password a texto
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            // Cambia el icono
+            this.classList.toggle('fa-eye-slash');
+        });
+    </script>
+</body>
 </html>
-

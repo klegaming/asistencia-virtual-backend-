@@ -1,0 +1,398 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA | Dashboard</title>
+    
+    <!-- Fuentes y Iconos -->
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-dark: #09090b;
+            --card-dark: #121216;
+            --border-color: #22222a;
+            --accent-blue: #2563eb;
+            --text-main: #ffffff;
+            --text-dim: #8a8a93;
+            --text-muted: #52525e;
+            
+            /* Colores de Materias (Versión AURA) */
+            --mat-creativ: #f87171; --mat-creativ-bg: rgba(248, 113, 113, 0.1);
+            --mat-mat: #60a5fa;     --mat-mat-bg: rgba(96, 165, 250, 0.1);
+            --mat-fisica: #fb923c;  --mat-fisica-bg: rgba(251, 146, 60, 0.1);
+            --mat-prog: #4ade80;    --mat-prog-bg: rgba(74, 222, 128, 0.1);
+            --mat-algebra: #c084fc; --mat-algebra-bg: rgba(192, 132, 252, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at 50% -20%, #1e1e2e 0%, #09090b 80%);
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        /* NAVIGATION */
+        nav {
+            background: rgba(18, 18, 22, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            justify-content: space-between;
+        }
+        .nav-brand {
+            font-size: 1.2rem;
+            letter-spacing: 6px;
+            font-weight: 300;
+            color: #fff;
+            padding: 20px 0;
+        }
+        .nav-brand span { color: var(--accent-blue); font-weight: 700; letter-spacing: 1px; margin-left: 5px; font-size: 0.8rem; }
+        
+        .nav-tabs { display: flex; gap: 10px; }
+        .nav-tab {
+            padding: 22px 15px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-tab:hover { color: #fff; }
+        .nav-tab.active { color: var(--accent-blue); border-bottom-color: var(--accent-blue); }
+
+        /* CONTAINER & LAYOUT */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 24px;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 25px;
+        }
+
+        /* CARDS */
+        .aura-card {
+            background: var(--card-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .card-header {
+            padding: 18px 22px;
+            background: rgba(255,255,255,0.03);
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* SELECTOR BAR */
+        .selector-bar {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .periodo-badge {
+            background: #1a1a20;
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+        .seccion-select {
+            background: #1a1a20;
+            border: 1px solid var(--border-color);
+            color: #fff;
+            padding: 6px 15px;
+            border-radius: 6px;
+            font-family: inherit;
+            outline: none;
+        }
+
+        /* TABLE */
+        .table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 700px; }
+        th {
+            background: #0d0d10;
+            padding: 12px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+        }
+        td {
+            padding: 12px 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.02);
+            text-align: center;
+        }
+        td:first-child {
+            background: rgba(255,255,255,0.01);
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            font-weight: 600;
+        }
+
+        /* SUBJECT PILLS */
+        .pill {
+            border-radius: 8px;
+            padding: 8px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            line-height: 1.2;
+            min-height: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .pill .cod { font-size: 0.6rem; opacity: 0.5; margin-top: 4px; font-weight: 400; }
+        
+        .pill-creativ { background: var(--mat-creativ-bg); color: var(--mat-creativ); }
+        .pill-mat     { background: var(--mat-mat-bg);     color: var(--mat-mat); }
+        .pill-fisica  { background: var(--mat-fisica-bg);  color: var(--mat-fisica); }
+        .pill-prog    { background: var(--mat-prog-bg);    color: var(--mat-prog); }
+        .pill-algebra { background: var(--mat-algebra-bg); color: var(--mat-algebra); }
+
+        /* SIDEBAR STATS */
+        .sidebar { display: flex; flex-direction: column; gap: 20px; }
+        .stat-bd { padding: 20px; }
+        .prox-mat { font-size: 1rem; font-weight: 700; margin-bottom: 5px; }
+        .prox-hora { font-size: 1.8rem; font-weight: 300; color: var(--accent-blue); margin: 10px 0; }
+        
+        .fn { font-size: 2.5rem; font-weight: 700; }
+        .fn.orange { color: var(--mat-fisica); }
+        .fn.red { color: var(--mat-creativ); }
+        
+        .bar-bg { background: #1a1a20; height: 6px; border-radius: 10px; margin-top: 15px; overflow: hidden; }
+        .bar-fill { height: 100%; border-radius: 10px; transition: 1s ease; }
+        .bar-fill.orange { background: var(--mat-fisica); }
+        .bar-fill.red { background: var(--mat-creativ); }
+
+        /* OTROS HORARIOS & SOPORTE */
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .soporte-grid, .otros-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .soporte-item {
+            background: var(--card-dark);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: 0.3s;
+        }
+        .soporte-item:hover { border-color: var(--accent-blue); transform: translateY(-5px); }
+        .si-btn {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            margin-top: 15px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        @media(max-width: 900px) {
+            .container { grid-template-columns: 1fr; }
+            .soporte-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-inner">
+        <!-- Enlace al Home en el Brand -->
+        <a href="{% url 'home' %}" class="nav-brand" style="text-decoration: none; color: inherit;">
+            A U R A <span>ASISTENCIA</span>
+        </a>
+        
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="showTab('inicio',this)">INICIO</div>
+            <div class="nav-tab" onclick="showTab('otros',this)">HORARIOS</div>
+            
+            <!-- Enlace directo a la página de contacto -->
+            <a href="{% url 'contacto' %}" class="nav-tab" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+                SOPORTE
+            </a>
+            
+            <!-- Botón de Salida (Cerrar Sesión) -->
+            <form action="{% url 'logout' %}" method="post" style="display: inline; margin-left: 10px;">
+                {% csrf_token %}
+                <button type="submit" class="nav-tab" style="background: none; border: none; color: #ff4d4d; cursor: pointer; font-family: inherit;">
+                    <i class="fa-solid fa-power-off"></i> SALIR
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="tab-content active" id="tab-inicio">
+    <div class="container">
+        <!-- Contenido Principal: Horario -->
+        <div class="main-content">
+            <div class="selector-bar">
+                <div class="periodo-badge"><i class="fa-solid fa-calendar-days"></i> PERÍODO: 20261CR</div>
+                <select class="seccion-select" id="seccion-select" onchange="cambiarSeccion(this.value)">
+                    <option value="10211">Sección 10211</option>
+                    <option value="10212" selected>Sección 10212</option>
+                    <option value="10213">Sección 10213</option>
+                </select>
+            </div>
+
+            <div class="aura-card">
+                <div class="card-header">
+                    <i class="fa-solid fa-table-cells"></i> HORARIO ACADÉMICO — SECCIÓN <span id="seccion-label-header">10212</span>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>HORA</th><th>LUN</th><th>MAR</th><th>MIE</th><th>JUE</th><th>VIE</th><th>SAB</th>
+                            </tr>
+                        </thead>
+                        <tbody id="horario-tbody">
+                            <!-- Se llena con JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar: Estadísticas -->
+        <div class="sidebar">
+            <div class="aura-card">
+                <div class="card-header"><i class="fa-solid fa-clock"></i> PRÓXIMA CLASE</div>
+                <div class="stat-bd">
+                    <div class="prox-mat" id="prox-mat">---</div>
+                    <div style="font-size: 0.7rem; color: var(--text-muted);" id="prox-cod">---</div>
+                    <div class="prox-hora" id="prox-hora">00:00</div>
+                    <div style="font-size: 0.75rem; color: var(--accent-blue); font-weight: 700;">
+                        <i class="fa-solid fa-bolt"></i> PRÓXIMAMENTE
+                    </div>
+                </div>
+            </div>
+
+            <div class="aura-card">
+                <div class="card-header"><i class="fa-solid fa-user-xmark"></i> FALTAS SEMANALES</div>
+                <div class="stat-bd">
+                    <div class="fn orange">3 <span style="font-size: 1rem; color: var(--text-dim);">/ 10</span></div>
+                    <div class="bar-bg"><div class="bar-fill orange" id="bar-s" style="width:30%"></div></div>
+                </div>
+            </div>
+
+            <div class="aura-card">
+                <div class="card-header"><i class="fa-solid fa-triangle-exclamation"></i> LÍMITE TOTAL</div>
+                <div class="stat-bd">
+                    <div class="fn red">30 <span style="font-size: 1rem; color: var(--text-dim);">/ 50</span></div>
+                    <div class="bar-bg"><div class="bar-fill red" id="bar-t" style="width:60%"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tab: Otros Horarios -->
+<div class="tab-content" id="tab-otros">
+    <div class="container" style="grid-template-columns: 1fr;">
+        <div class="otros-grid">
+            <div class="aura-card">
+                <div class="card-header"><i class="fa-solid fa-book"></i> BIBLIOTECA</div>
+                <div class="stat-bd">
+                    <p style="color: var(--text-dim); line-height: 1.6;">Abierta las 24 horas para estudio e investigación.</p>
+                </div>
+            </div>
+            <!-- Otros cards similares... -->
+        </div>
+    </div>
+</div>
+
+<!-- Tab: Soporte -->
+<div class="tab-content" id="tab-soporte">
+    <div class="container" style="grid-template-columns: 1fr;">
+        <div class="soporte-grid">
+            <div class="soporte-item">
+                <i class="fa-solid fa-headset" style="font-size: 2rem; color: var(--accent-blue); margin-bottom: 15px;"></i>
+                <div class="prox-mat">Chat Técnico</div>
+                <p style="color: var(--text-dim); font-size: 0.85rem;">Resolución inmediata de problemas de plataforma.</p>
+                <button class="si-btn">INICIAR</button>
+            </div>
+            <div class="soporte-item">
+                <i class="fa-solid fa-envelope-open-text" style="font-size: 2rem; color: var(--accent-blue); margin-bottom: 15px;"></i>
+                <div class="prox-mat">Ticket de Soporte</div>
+                <p style="color: var(--text-dim); font-size: 0.85rem;">Respuesta garantizada en menos de 24 horas.</p>
+                <button class="si-btn">REDACTAR</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Tu lógica de SECCIONES se mantiene igual, solo actualizamos el renderizado
+const HORARIOS_DB = {{ horarios_json|safe }};
+
+// Horas únicas ordenadas
+const horas = [...new Set(HORARIOS_DB.map(h => h.inicio))].sort();
+const dias = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
+
+function renderHorario(seccion) {
+    const tbody = document.getElementById('horario-tbody');
+    tbody.innerHTML = '';
+
+    horas.forEach(hora => {
+        const tr = document.createElement('tr');
+        let html = `<td>${hora}</td>`;
+        dias.forEach(dia => {
+            const clase = HORARIOS_DB.find(h => h.inicio === hora && h.dia === dia);
+            if (clase) {
+                const key = getKey(clase.codigo);
+                html += `<td><div class="pill pill-${key}">${clase.materia}<span class="cod">${clase.codigo} | ${clase.aula}</span></div></td>`;
+            } else {
+                html += `<td></td>`;
+            }
+        });
+        tr.innerHTML = html;
+        tbody.appendChild(tr);
+    });
+
+    document.getElementById('seccion-label-header').textContent = seccion;
+}
+
+function getKey(codigo) {
+    if (codigo.startsWith('ALI')) return 'algebra';
+    if (codigo.startsWith('MAI')) return 'mat';
+    if (codigo.startsWith('CIN')) return 'creativ';
+    if (codigo.startsWith('PRO')) return 'prog';
+    if (codigo.startsWith('FIS')) return 'fisica';
+    return 'mat';
+}
+
+window.onload = () => renderHorario('10211');
+</script>
+
+</body>
+</html>

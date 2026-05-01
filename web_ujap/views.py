@@ -1,73 +1,133 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.core import signing
 from django.conf import settings
 from django.template.loader import render_to_string
-from .models import UsuarioUJAP
+from django.db.models import Count, Q
+from django.utils import timezone
+from datetime import timedelta
+from django.http import JsonResponse
+from .models import Usuario, Estudiante, Materia, Horario, Asistencia
+
+
+# ─── Home ─────────────────────────────────────────────────────────────────────
+def home_view(request):
+    return render(request, 'web_ujap/home.html')
 
 
 # ─── Login ────────────────────────────────────────────────────────────────────
 def login_view(request):
     if request.method == 'POST':
-        user_data = request.POST.get('usuario', '').strip()
-        pass_data = request.POST.get('password', '').strip()
-
-        try:
-            usuario = UsuarioUJAP.objects.get(cedula=user_data, password=pass_data)
-            request.session['usuario_id'] = usuario.id
-            request.session['usuario_cedula'] = usuario.cedula
-            return redirect('dashboard')   # cambia 'dashboard' por tu vista principal
-        except UsuarioUJAP.DoesNotExist:
-            messages.error(request, 'Cédula o contraseña incorrectos.')
-
+        username = request.POST.get('usuario')
+        password = request.POST.get('password')
+        
+        print(f"Intentando login: {username} / {password}")  # ← agrega esto
+        
+        user = authenticate(request, username=username, password=password)
+        
+        print(f"Usuario autenticado: {user}")  # ← y esto
+        
+        if user is not None:
+            login(request, user)
+            return redirect('pagina')
+        else:
+            return render(request, 'web_ujap/login.html', {
+                'error': 'Usuario o contraseña incorrectos'
+            })
     return render(request, 'web_ujap/login.html')
 
 
 # ─── Crear usuario ─────────────────────────────────────────────────────────────
 def usuario_view(request):
     if request.method == 'POST':
-        cedula  = request.POST.get('cedula', '').strip()
-        correo  = request.POST.get('email', '').strip()
-        facu    = request.POST.get('facultad', '').strip()
-        pass1   = request.POST.get('password', '').strip()
-        pass2   = request.POST.get('confirm_password', '').strip()
+        cedula    = request.POST.get('cedula', '').strip()
+        username  = request.POST.get('username', '').strip()
+        facultad  = request.POST.get('facultad', '').strip()
+        email     = request.POST.get('email', '').strip()
+        password  = request.POST.get('password', '').strip()
+        password2 = request.POST.get('password2', '').strip()
 
-        if not all([cedula, correo, facu, pass1]):
-            messages.error(request, 'Todos los campos son obligatorios.')
-            return render(request, 'web_ujap/crear_usuario.html',
-                          {'cedula_viva': cedula, 'correo_vivo': correo})
+        if not all([cedula, facultad, email, password]):
+            return render(request, 'web_ujap/crear_usuario.html', {
+                'error': 'Todos los campos son obligatorios.'
+            })
 
-        if pass1 != pass2:
-            messages.error(request, 'Las contraseñas no coinciden.')
-            return render(request, 'web_ujap/crear_usuario.html',
-                          {'cedula_viva': cedula, 'correo_vivo': correo})
+        if password != password2:
+            return render(request, 'web_ujap/crear_usuario.html', {
+                'error': 'Las contraseñas no coinciden.'
+            })
 
-        if UsuarioUJAP.objects.filter(cedula=cedula).exists():
-            messages.error(request, 'Ya existe un usuario con esa cédula.')
-            return render(request, 'web_ujap/crear_usuario.html',
-                          {'cedula_viva': cedula, 'correo_vivo': correo})
+        if Usuario.objects.filter(email=email).exists():
+            return render(request, 'web_ujap/crear_usuario.html', {
+                'error': 'Ya existe una cuenta con ese correo.'
+            })
 
-        UsuarioUJAP.objects.create(
+        if Usuario.objects.filter(username=cedula).exists():
+            return render(request, 'web_ujap/crear_usuario.html', {
+                'error': 'Ya existe un usuario con esa cédula.'
+            })
+        if Usuario.objects.filter(username=username).exists():
+            return render(request, 'web_ujap/crear_usuario.html', {
+                'error': 'Ya existe un usuario con ese nombre de usuario.'
+            })
+
+        user = Usuario.objects.create_user(
+            username=username,
+            email=email,
+            password=password,
             cedula=cedula,
-            correo=correo,
-            facultad=facu,
-            password=pass1,
+            facultad=facultad,
         )
-        messages.success(request, '¡Cuenta creada con éxito!')
-        return redirect('login')
+        login(request, user)
+        return redirect('pagina')
 
     return render(request, 'web_ujap/crear_usuario.html')
+
+
+# ─── Logout ───────────────────────────────────────────────────────────────────
+def logout_view(request):
+    logout(request)
+    return redirect('login')
+
+
+# ─── Página principal (después del login) ─────────────────────────────────────
+@login_required(login_url='login')
+def pagina_view(request):
+    horarios = Horario.objects.select_related('materia').all().order_by('dia_semana', 'hora_inicio')
+    
+    # Organizar por sección y día
+    horarios_json = []
+    for h in horarios:
+        horarios_json.append({
+            'materia': h.materia.nombre,
+            'codigo': h.materia.codigo,
+            'dia': h.dia_semana,
+            'inicio': h.hora_inicio.strftime('%H:%M'),
+            'fin': h.hora_fin.strftime('%H:%M'),
+            'aula': h.aula,
+        })
+    
+    import json
+    return render(request, 'web_ujap/pagina.html', {
+        'horarios_json': json.dumps(horarios_json)
+    })
+
+
+# ─── Contacto ─────────────────────────────────────────────────────────────────
+def contacto_view(request):
+    return render(request, 'web_ujap/contacto.html')
 
 
 # ─── Recuperar contraseña – Paso 1: pedir email ───────────────────────────────
 def recuperar_view(request):
     if request.method == 'POST':
         correo = request.POST.get('email', '').strip().lower()
-        usuario = UsuarioUJAP.objects.filter(correo__iexact=correo).first()
+        usuario = Usuario.objects.filter(email__iexact=correo).first()
 
         if usuario:
-            # Generamos un token firmado que expira en 1 hora
             token = signing.dumps({'id': usuario.id}, salt='recuperar-password')
             reset_url = request.build_absolute_uri(
                 f'/recuperar/confirmar/{token}/'
@@ -81,12 +141,11 @@ def recuperar_view(request):
                 subject='Recuperación de contraseña - UJAP.online',
                 message=f'Enlace: {reset_url}',
                 from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[usuario.correo],
+                recipient_list=[usuario.email],
                 html_message=email_html,
                 fail_silently=False,
             )
 
-        # Mismo mensaje siempre (seguridad: no revelar si el correo existe)
         messages.success(request,
             'Si ese correo está registrado, recibirás las instrucciones en breve.')
         return redirect('recuperar_enviado')
@@ -99,13 +158,12 @@ def recuperar_enviado_view(request):
     return render(request, 'web_ujap/recuperar_enviado.html')
 
 
-# ─── Recuperar – Paso 3: nueva contraseña (desde link del email) ──────────────
+# ─── Recuperar – Paso 3: nueva contraseña ─────────────────────────────────────
 def recuperar_confirmar_view(request, token):
     try:
-        # El token expira en 3600 segundos (1 hora)
         data = signing.loads(token, salt='recuperar-password', max_age=3600)
-        usuario = UsuarioUJAP.objects.get(id=data['id'])
-    except (signing.SignatureExpired, signing.BadSignature, UsuarioUJAP.DoesNotExist):
+        usuario = Usuario.objects.get(id=data['id'])
+    except (signing.SignatureExpired, signing.BadSignature, Usuario.DoesNotExist):
         return render(request, 'web_ujap/recuperar_invalido.html')
 
     if request.method == 'POST':
@@ -119,7 +177,7 @@ def recuperar_confirmar_view(request, token):
         elif pass1 != pass2:
             messages.error(request, 'Las contraseñas no coinciden.')
         else:
-            usuario.password = pass1
+            usuario.set_password(pass1)  # ← encripta correctamente
             usuario.save()
             messages.success(request, '¡Contraseña actualizada correctamente!')
             return redirect('login')
@@ -127,56 +185,31 @@ def recuperar_confirmar_view(request, token):
     return render(request, 'web_ujap/recuperar_confirmar.html', {'token': token})
 
 
-# ─── Otras vistas ─────────────────────────────────────────────────────────────
-def contacto_view(request):
-    return render(request, 'web_ujap/contacto.html')
-
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from django.db.models import Count, Q, Avg
-from django.utils import timezone
-from datetime import timedelta, datetime
-from django.http import JsonResponse
-from .models import Estudiante, Materia, Horario, Asistencia
-
-
-#@login_required
+# ─── Dashboard ────────────────────────────────────────────────────────────────
 def dashboard_index(request):
-    """Vista principal del dashboard con estadísticas generales"""
-    
-    # Fecha actual y rangos
     hoy = timezone.now().date()
-    inicio_semana = hoy - timedelta(days=hoy.weekday())
-    fin_semana = inicio_semana + timedelta(days=6)
     inicio_mes = hoy.replace(day=1)
-    
-    # KPIs Principales
+
     total_estudiantes = Estudiante.objects.filter(activo=True).count()
     total_materias = Materia.objects.filter(activa=True).count()
-    
-    # Asistencias de hoy
+
     asistencias_hoy = Asistencia.objects.filter(fecha=hoy)
     total_asistencias_hoy = asistencias_hoy.count()
     presentes_hoy = asistencias_hoy.filter(estado='presente').count()
     ausentes_hoy = asistencias_hoy.filter(estado='ausente').count()
     tardes_hoy = asistencias_hoy.filter(estado='tarde').count()
-    
-    # Porcentaje de asistencia hoy
+
     porcentaje_asistencia_hoy = 0
     if total_asistencias_hoy > 0:
         porcentaje_asistencia_hoy = round((presentes_hoy / total_asistencias_hoy) * 100, 2)
-    
-    # Asistencias del mes
+
     asistencias_mes = Asistencia.objects.filter(fecha__gte=inicio_mes, fecha__lte=hoy)
-    total_asistencias_mes = asistencias_mes.count()
     ausencias_mes = asistencias_mes.filter(estado='ausente').count()
-    
-    # Estudiantes con más faltas (top 5)
+
     estudiantes_faltas = Estudiante.objects.filter(activo=True).annotate(
         total_faltas=Count('asistencias', filter=Q(asistencias__estado='ausente'))
     ).order_by('-total_faltas')[:5]
-    
-    # Estudiantes con mejor asistencia (top 5)
+
     estudiantes_mejor_asistencia = []
     for estudiante in Estudiante.objects.filter(activo=True):
         porcentaje = estudiante.calcular_porcentaje_asistencia()
@@ -186,32 +219,23 @@ def dashboard_index(request):
                 'porcentaje': porcentaje
             })
     estudiantes_mejor_asistencia = sorted(
-        estudiantes_mejor_asistencia, 
-        key=lambda x: x['porcentaje'], 
+        estudiantes_mejor_asistencia,
+        key=lambda x: x['porcentaje'],
         reverse=True
     )[:5]
-    
-    # Materias con más ausencias
+
     materias_ausencias = Materia.objects.filter(activa=True).annotate(
         total_ausencias=Count('asistencias', filter=Q(asistencias__estado='ausente'))
     ).order_by('-total_ausencias')[:5]
-    
-    # Horarios de hoy
-    dia_hoy = hoy.strftime('%A').lower()
+
     dias_español = {
-        'monday': 'lunes',
-        'tuesday': 'martes',
-        'wednesday': 'miercoles',
-        'thursday': 'jueves',
-        'friday': 'viernes',
-        'saturday': 'sabado',
-        'sunday': 'domingo'
+        'monday': 'lunes', 'tuesday': 'martes', 'wednesday': 'miercoles',
+        'thursday': 'jueves', 'friday': 'viernes', 'saturday': 'sabado', 'sunday': 'domingo'
     }
-    dia_hoy_español = dias_español.get(dia_hoy, 'lunes')
+    dia_hoy_español = dias_español.get(hoy.strftime('%A').lower(), 'lunes')
     horarios_hoy = Horario.objects.filter(dia_semana=dia_hoy_español).order_by('hora_inicio')
-    
+
     context = {
-        # KPIs
         'total_estudiantes': total_estudiantes,
         'total_materias': total_materias,
         'presentes_hoy': presentes_hoy,
@@ -219,153 +243,96 @@ def dashboard_index(request):
         'tardes_hoy': tardes_hoy,
         'porcentaje_asistencia_hoy': porcentaje_asistencia_hoy,
         'ausencias_mes': ausencias_mes,
-        
-        # Listas
         'estudiantes_faltas': estudiantes_faltas,
         'estudiantes_mejor_asistencia': estudiantes_mejor_asistencia,
         'materias_ausencias': materias_ausencias,
         'horarios_hoy': horarios_hoy,
-        
-        # Fechas
         'hoy': hoy,
         'dia_hoy': dia_hoy_español,
     }
-    
     return render(request, 'dashboard/index.html', context)
 
 
-#@login_required
+# ─── API Estadísticas ─────────────────────────────────────────────────────────
 def estadisticas_json(request):
-    """API endpoint para datos de gráficos en JSON"""
-    
     tipo = request.GET.get('tipo', 'asistencias_semana')
-    
+
     if tipo == 'asistencias_semana':
-        # Asistencias de los últimos 7 días
         hoy = timezone.now().date()
-        datos = []
         labels = []
-        
+        datos = {'presentes': [], 'ausentes': [], 'tardes': []}
+
         for i in range(6, -1, -1):
             fecha = hoy - timedelta(days=i)
             asistencias = Asistencia.objects.filter(fecha=fecha)
-            
-            presentes = asistencias.filter(estado='presente').count()
-            ausentes = asistencias.filter(estado='ausente').count()
-            tardes = asistencias.filter(estado='tarde').count()
-            
             labels.append(fecha.strftime('%d/%m'))
-            
-            if i == 6:
-                datos = {
-                    'presentes': [presentes],
-                    'ausentes': [ausentes],
-                    'tardes': [tardes]
-                }
-            else:
-                datos['presentes'].append(presentes)
-                datos['ausentes'].append(ausentes)
-                datos['tardes'].append(tardes)
-        
+            datos['presentes'].append(asistencias.filter(estado='presente').count())
+            datos['ausentes'].append(asistencias.filter(estado='ausente').count())
+            datos['tardes'].append(asistencias.filter(estado='tarde').count())
+
         return JsonResponse({
             'labels': labels,
             'datasets': [
-                {
-                    'label': 'Presentes',
-                    'data': datos['presentes'],
-                    'backgroundColor': 'rgba(75, 192, 192, 0.6)',
-                    'borderColor': 'rgba(75, 192, 192, 1)',
-                    'borderWidth': 2
-                },
-                {
-                    'label': 'Ausentes',
-                    'data': datos['ausentes'],
-                    'backgroundColor': 'rgba(255, 99, 132, 0.6)',
-                    'borderColor': 'rgba(255, 99, 132, 1)',
-                    'borderWidth': 2
-                },
-                {
-                    'label': 'Tardanzas',
-                    'data': datos['tardes'],
-                    'backgroundColor': 'rgba(255, 206, 86, 0.6)',
-                    'borderColor': 'rgba(255, 206, 86, 1)',
-                    'borderWidth': 2
-                }
+                {'label': 'Presentes', 'data': datos['presentes'],
+                 'backgroundColor': 'rgba(75, 192, 192, 0.6)', 'borderColor': 'rgba(75, 192, 192, 1)', 'borderWidth': 2},
+                {'label': 'Ausentes', 'data': datos['ausentes'],
+                 'backgroundColor': 'rgba(255, 99, 132, 0.6)', 'borderColor': 'rgba(255, 99, 132, 1)', 'borderWidth': 2},
+                {'label': 'Tardanzas', 'data': datos['tardes'],
+                 'backgroundColor': 'rgba(255, 206, 86, 0.6)', 'borderColor': 'rgba(255, 206, 86, 1)', 'borderWidth': 2},
             ]
         })
-    
+
     elif tipo == 'estados_hoy':
-        # Distribución de estados hoy
         hoy = timezone.now().date()
         asistencias = Asistencia.objects.filter(fecha=hoy)
-        
-        presentes = asistencias.filter(estado='presente').count()
-        ausentes = asistencias.filter(estado='ausente').count()
-        tardes = asistencias.filter(estado='tarde').count()
-        justificados = asistencias.filter(estado='justificado').count()
-        
         return JsonResponse({
             'labels': ['Presentes', 'Ausentes', 'Tardanzas', 'Justificados'],
             'datasets': [{
-                'data': [presentes, ausentes, tardes, justificados],
+                'data': [
+                    asistencias.filter(estado='presente').count(),
+                    asistencias.filter(estado='ausente').count(),
+                    asistencias.filter(estado='tarde').count(),
+                    asistencias.filter(estado='justificado').count(),
+                ],
                 'backgroundColor': [
-                    'rgba(75, 192, 192, 0.8)',
-                    'rgba(255, 99, 132, 0.8)',
-                    'rgba(255, 206, 86, 0.8)',
-                    'rgba(54, 162, 235, 0.8)'
+                    'rgba(75, 192, 192, 0.8)', 'rgba(255, 99, 132, 0.8)',
+                    'rgba(255, 206, 86, 0.8)', 'rgba(54, 162, 235, 0.8)'
                 ],
                 'borderWidth': 2
             }]
         })
-    
+
     elif tipo == 'asistencias_por_materia':
-        # Top 5 materias por asistencias
         materias = Materia.objects.filter(activa=True).annotate(
             total_asistencias=Count('asistencias')
         ).order_by('-total_asistencias')[:5]
-        
-        labels = [m.nombre for m in materias]
-        datos = [m.total_asistencias for m in materias]
-        
         return JsonResponse({
-            'labels': labels,
+            'labels': [m.nombre for m in materias],
             'datasets': [{
                 'label': 'Total Asistencias',
-                'data': datos,
+                'data': [m.total_asistencias for m in materias],
                 'backgroundColor': 'rgba(153, 102, 255, 0.6)',
                 'borderColor': 'rgba(153, 102, 255, 1)',
                 'borderWidth': 2
             }]
         })
-    
+
     return JsonResponse({'error': 'Tipo no válido'}, status=400)
 
 
-#@login_required
+# ─── Reporte estudiante ───────────────────────────────────────────────────────
 def reporte_estudiante(request, estudiante_id):
-    """Vista de reporte individual de estudiante"""
-    
     estudiante = Estudiante.objects.get(id=estudiante_id)
     asistencias = estudiante.asistencias.all().order_by('-fecha')
-    
-    # Estadísticas del estudiante
-    total_asistencias = asistencias.count()
-    presentes = asistencias.filter(estado='presente').count()
-    ausentes = asistencias.filter(estado='ausente').count()
-    tardes = asistencias.filter(estado='tarde').count()
-    justificados = asistencias.filter(estado='justificado').count()
-    
-    porcentaje = estudiante.calcular_porcentaje_asistencia()
-    
+
     context = {
         'estudiante': estudiante,
-        'asistencias': asistencias[:20],  # Últimas 20
-        'total_asistencias': total_asistencias,
-        'presentes': presentes,
-        'ausentes': ausentes,
-        'tardes': tardes,
-        'justificados': justificados,
-        'porcentaje': porcentaje
+        'asistencias': asistencias[:20],
+        'total_asistencias': asistencias.count(),
+        'presentes': asistencias.filter(estado='presente').count(),
+        'ausentes': asistencias.filter(estado='ausente').count(),
+        'tardes': asistencias.filter(estado='tarde').count(),
+        'justificados': asistencias.filter(estado='justificado').count(),
+        'porcentaje': estudiante.calcular_porcentaje_asistencia()
     }
-    
     return render(request, 'dashboard/reporte_estudiante.html', context)

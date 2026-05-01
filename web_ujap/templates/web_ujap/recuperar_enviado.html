@@ -1,32 +1,64 @@
-<!DOCTYPE html>
 {% load static %}
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Correo enviado - UJAP.online</title>
-  <link rel="stylesheet" href="{% static 'web_ujap/css/recuperar.css' %}">
-  <link rel="icon" href="{% static 'web_ujap/css/img/logo.ico' %}" type="image/x-icon">
-  <style>
-    .msg-box{max-width:420px;margin:60px auto;text-align:center;padding:40px;background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.1)}
-    .msg-box .icon{font-size:52px;margin-bottom:16px}
-    .msg-box h2{color:#1a1a2e;margin-bottom:10px}
-    .msg-box p{color:#666;font-size:14px;line-height:1.7}
-    .msg-box a{display:inline-block;margin-top:24px;color:#e63946;font-weight:600;text-decoration:none}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA | Correo Enviado</title>
+    
+    <!-- Usamos el mismo CSS maestro -->
+    <link rel="stylesheet" href="{% static 'web_ujap/css/login.css' %}">
+    
+    <!-- Font Awesome para el icono de check o sobre -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <nav class="navbar">
-    <div class="nav-container">
-      <a href="{% url 'login' %}" class="nav-logo">UJAP<span class="logo-red">.online</span></a>
+
+    <div class="top-bar">
+        <a href="{% url 'login' %}" class="btn-back">
+            <i class="fa-solid fa-arrow-left"></i> Volver al Login
+        </a>
     </div>
-  </nav>
-  <div class="msg-box">
-    <div class="icon">📬</div>
-    <h2>Revisá tu correo</h2>
-    <p>Si tu dirección está registrada, recibirás un mensaje con el enlace de recuperación en los próximos minutos.</p>
-    <p style="margin-top:10px;font-size:13px;color:#999">No olvides revisar la carpeta de <strong>spam</strong>.</p>
-    <a href="{% url 'login' %}">← Volver al inicio de sesión</a>
-  </div>
+
+    <div class="login-container">
+        
+        <div class="brand-header">
+            <h1 class="brand-title">A U R A</h1>
+            <p class="brand-subtitle">VERIFICACIÓN</p>
+        </div>
+
+        <div class="login-box" style="text-align: center;">
+            <!-- Icono grande de éxito/correo -->
+            <div style="margin-bottom: 25px;">
+                <i class="fa-regular fa-paper-plane" style="font-size: 3.5rem; color: #3b82f6;"></i>
+            </div>
+
+            <h2 style="color: #ffffff; font-size: 1.5rem; font-weight: 500; margin-bottom: 15px;">
+                Revisa tu correo
+            </h2>
+
+            <p style="color: #8a8a93; font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px;">
+                Si tu dirección está registrada, recibirás un mensaje con el enlace de recuperación en los próximos minutos.
+            </p>
+
+            <p style="color: #52525e; font-size: 0.85rem; background-color: #1a1a20; padding: 12px; border-radius: 8px; border: 1px dashed #2a2a35;">
+                <i class="fa-solid fa-circle-info" style="margin-right: 5px;"></i>
+                No olvides revisar la carpeta de <strong>spam</strong> o correo no deseado.
+            </p>
+
+            <div class="divider" style="margin: 30px 0;">
+                <span class="line"></span>
+            </div>
+
+            <a href="{% url 'login' %}" class="btn-signin" style="display: block; text-decoration: none;">
+                ENTENDIDO
+            </a>
+        </div>
+
+        <div class="footer-text">
+            Protected by advanced encryption
+        </div>
+        
+    </div>
 </body>
 </html>

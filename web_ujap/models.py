@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import AbstractUser
+
 
 # ===== TU MODELO EXISTENTE (NO TOCAR) =====
 class UsuarioUJAP(models.Model):
@@ -111,3 +113,10 @@ class Asistencia(models.Model):
     
     def __str__(self):
         return f"{self.estudiante.nombre_completo} - {self.materia.nombre} ({self.get_estado_display()}) - {self.fecha}"
+    
+class Usuario(AbstractUser):
+    cedula = models.CharField(max_length=20, unique=True, blank=True, null=True)
+    facultad = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return self.username

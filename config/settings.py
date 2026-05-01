@@ -139,7 +139,7 @@ STATIC_URL = 'static/'
 
 # Esta es la lista de carpetas donde Django buscará archivos estáticos adicionales
 STATICFILES_DIRS = [
-    BASE_DIR / "web_ujap" / "static",
+    os.path.join(BASE_DIR, 'static'),
 ]
 
 SITE_NAME = "UJAP.online"
@@ -154,7 +154,8 @@ EMAIL_HOST_USER     = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL  = os.getenv('DEFAULT_FROM_EMAIL')
 LOGIN_URL = '/'  # Redirigir a la página principal (tu login)
-LOGIN_REDIRECT_URL = '/dashboard/'  # Después del login ir al dashboard
- 
+LOGIN_REDIRECT_URL = '/pagina/'  # Después del login ir a la página 
 # Para probar sin enviar emails reales (los imprime en la consola del servidor):
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+AUTH_USER_MODEL = 'web_ujap.Usuario'

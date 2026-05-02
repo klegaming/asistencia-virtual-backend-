@@ -15,12 +15,12 @@
     <!-- Navbar sincronizado con AURA -->
     <nav>
         <div class="nav-inner">
-            <a href="{% url 'home' %}" class="nav-brand">
+            <a href="{% url 'pagina' %}" class="nav-brand">
                 A U R A <span>ASISTENCIA</span>
             </a>
             
             <div class="nav-tabs">
-                <a href="{% url 'home' %}" class="nav-tab">INICIO</a>
+                <a href="{% url 'pagina' %}" class="nav-tab">INICIO</a>
                 <!-- Marcamos SOPORTE como activa -->
                 <div class="nav-tab active">SOPORTE</div>
                 
@@ -49,12 +49,12 @@
                 
                 <div class="form-group">
                     <label>Nombre Completo</label>
-                    <input type="text" name="nombre" value="Kleiver Torrealba" required>
+                    <input type="text" placeholder="Escribe tu nombre completo" name="nombre" value="" required>
                 </div>
                 
                 <div class="form-group">
-                    <label>Correo Institucional</label>
-                    <input type="email" name="email" value="Example@gmail.com" required>
+                    <label>Correo </label>
+                    <input type="email" placeholder="example@ujap.edu.ve" name="email" value="" required>
                 </div>
                 
                 <div class="form-group">

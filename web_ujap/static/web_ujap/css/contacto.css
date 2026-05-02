@@ -129,6 +129,12 @@ input, textarea, select {
     font-size: 0.95rem;
     box-sizing: border-box;
     transition: 0.3s;
+    /* Añadimos esto: */
+    font-family: inherit; 
+}
+textarea {
+    resize: vertical; /* Solo para abajo, mano */
+    min-height: 120px;
 }
 input:focus, textarea:focus, select:focus {
     outline: none;

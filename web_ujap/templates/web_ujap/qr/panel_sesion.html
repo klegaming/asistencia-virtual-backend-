@@ -1,0 +1,324 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA | Panel de Clase</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'web_ujap/css/panel_sesion.css' %}">
+
+</head>
+<body>
+
+{# ── Header ── #}
+<div class="panel-header">
+    <div class="titulo">
+        <h2>{{ sesion.horario.materia.nombre }}</h2>
+        <p>
+            Sección {{ sesion.horario.seccion.codigo }} &nbsp;·&nbsp;
+            {{ sesion.horario.get_dia_semana_display }}
+            {{ sesion.horario.hora_inicio|time:"H:i" }}–{{ sesion.horario.hora_fin|time:"H:i" }}
+            &nbsp;·&nbsp; Aula {{ sesion.horario.aula }}
+            &nbsp;·&nbsp; {{ sesion.fecha }}
+        </p>
+    </div>
+    <form method="POST" action="{% url 'dashboard:cerrar_sesion' sesion.token %}">
+        {% csrf_token %}
+        <button type="submit" class="btn-cerrar"
+            onclick="return confirm('¿Cerrás la sesión? El QR dejará de funcionar.')">
+            <i class="fa-solid fa-stop"></i> Cerrar clase
+        </button>
+    </form>
+</div>
+
+{# ── Body ── #}
+<div class="panel-body">
+
+    {# ── Izquierda: QR + Resumen ── #}
+    <div class="qr-panel">
+        <div class="aura-card">
+            <div class="card-header">
+                <span><i class="fa-solid fa-qrcode"></i> &nbsp;CÓDIGO QR</span>
+                {% if sesion.esta_vigente %}
+                    <span class="qr-status activo">
+                        <i class="fa-solid fa-circle" style="font-size:0.5rem;"></i>
+                        ACTIVO · <span id="minutos">{{ sesion.minutos_restantes }}</span> MIN
+                    </span>
+                {% else %}
+                    <span class="qr-status expirado">
+                        <i class="fa-solid fa-ban"></i> EXPIRADO
+                    </span>
+                {% endif %}
+            </div>
+            <div class="qr-box">
+                <img src="data:image/png;base64,{{ qr_b64 }}" alt="QR" class="qr-img">
+                <p class="qr-url">{{ url_escaneo }}</p>
+            </div>
+        </div>
+
+        <div class="aura-card">
+            <div class="card-header">RESUMEN</div>
+            <div class="contadores">
+                <div class="contador verde">
+                    <div class="num" id="cnt-presentes">{{ presentes }}</div>
+                    <div class="label">PRESENTES</div>
+                </div>
+                <div class="contador rojo">
+                    <div class="num" id="cnt-sin">{{ sin_registro }}</div>
+                    <div class="label">SIN REGISTRAR</div>
+                </div>
+                <div class="contador gris">
+                    <div class="num" id="cnt-total">{{ total }}</div>
+                    <div class="label">TOTAL</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# ── Derecha: lista + buscador ── #}
+    <div class="aura-card" style="align-self: start;">
+        <div class="card-header">
+            <span><i class="fa-solid fa-users"></i> &nbsp;ESTUDIANTES</span>
+            <span id="ultima-act" style="font-size:0.7rem; color:var(--text-muted);">—</span>
+        </div>
+
+        {# Buscador #}
+        <div class="search-container">
+            <div class="search-box">
+                <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+                <input type="text" id="buscador-input"
+                    placeholder="Buscar por nombre o cédula para agregar manualmente..."
+                    autocomplete="off">
+            </div>
+            <div id="search-results" class="search-results hidden"></div>
+        </div>
+
+        {# Tabla #}
+        <div style="overflow-x: auto;">
+            <table class="tabla-panel" id="tabla-est">
+                <thead>
+                    <tr>
+                        <th>ESTUDIANTE</th>
+                        <th>CÉDULA</th>
+                        <th style="text-align:center;">ESTADO</th>
+                        <th style="text-align:center;">ACCIÓN MANUAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in lista %}
+                    <tr id="fila-{{ item.estudiante.id }}">
+                        <td>{{ item.estudiante.nombre_completo }}</td>
+                        <td class="cedula-td">{{ item.estudiante.cedula }}</td>
+                        <td style="text-align:center;" id="estado-{{ item.estudiante.id }}">
+                            {% if item.estado == 'presente' %}
+                                <span class="badge badge-presente">PRESENTE</span>
+                            {% elif item.estado == 'tarde' %}
+                                <span class="badge badge-tarde">TARDANZA</span>
+                            {% elif item.estado == 'ausente' %}
+                                <span class="badge badge-ausente">AUSENTE</span>
+                            {% elif item.estado == 'justificado' %}
+                                <span class="badge badge-justificado">JUSTIFICADO</span>
+                            {% else %}
+                                <span class="badge badge-sin">SIN REGISTRAR</span>
+                            {% endif %}
+                        </td>
+                        <td style="text-align:center;">
+                            <div class="btn-group">
+                                <button class="btn-mark verde btn-marcar"
+                                    data-id="{{ item.estudiante.id }}" data-estado="presente"
+                                    title="Presente">✓</button>
+                                <button class="btn-mark amarillo btn-marcar"
+                                    data-id="{{ item.estudiante.id }}" data-estado="tarde"
+                                    title="Tardanza">⏰</button>
+                                <button class="btn-mark rojo btn-marcar"
+                                    data-id="{{ item.estudiante.id }}" data-estado="ausente"
+                                    title="Ausente">✗</button>
+                                <button class="btn-mark azul btn-marcar"
+                                    data-id="{{ item.estudiante.id }}" data-estado="justificado"
+                                    title="Justificado">📋</button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr id="fila-vacia">
+                        <td colspan="4" style="text-align:center; color:var(--text-muted); padding:40px;">
+                            No hay estudiantes en esta sección. Usá el buscador para agregar.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="timestamp" id="pie-tabla">Actualizando...</div>
+    </div>
+</div>
+
+{# ── Modal para elegir estado ── #}
+<div class="modal-overlay" id="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-nombre" id="modal-nombre"></div>
+        <div class="modal-cedula" id="modal-cedula"></div>
+        <div class="modal-label">SELECCIONÁ EL ESTADO</div>
+        <div class="modal-btns">
+            <button class="modal-btn verde"    onclick="confirmarMarca('presente')">
+                <i class="fa-solid fa-check"></i> Presente
+            </button>
+            <button class="modal-btn amarillo" onclick="confirmarMarca('tarde')">
+                <i class="fa-solid fa-clock"></i> Tardanza
+            </button>
+            <button class="modal-btn rojo"     onclick="confirmarMarca('ausente')">
+                <i class="fa-solid fa-xmark"></i> Ausente
+            </button>
+            <button class="modal-btn azul"     onclick="confirmarMarca('justificado')">
+                <i class="fa-solid fa-file"></i> Justificado
+            </button>
+        </div>
+        <button class="modal-cancelar" onclick="cerrarModal()">Cancelar</button>
+    </div>
+</div>
+
+<script>
+    const URL_MARCAR  = "{% url 'dashboard:marcar_manual' sesion.token %}";
+    const URL_ESTADO  = "{% url 'dashboard:estado_sesion' sesion.token %}";
+    const URL_BUSCAR  = "{% url 'dashboard:buscar_estudiante' sesion.token %}";
+    const CSRF        = "{{ csrf_token }}";
+
+    const BADGES = {
+        presente:    '<span class="badge badge-presente">PRESENTE</span>',
+        tarde:       '<span class="badge badge-tarde">TARDANZA</span>',
+        ausente:     '<span class="badge badge-ausente">AUSENTE</span>',
+        justificado: '<span class="badge badge-justificado">JUSTIFICADO</span>',
+    };
+
+    // ── Marcar desde botones de la tabla ─────────────────────────────────────
+    document.querySelectorAll('.btn-marcar').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            await marcarEstudiante(btn.dataset.id, btn.dataset.estado);
+        });
+    });
+
+    async function marcarEstudiante(id, estado) {
+        const resp = await fetch(URL_MARCAR, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': CSRF },
+            body: `estudiante_id=${id}&estado=${estado}`,
+        });
+        const data = await resp.json();
+        if (data.ok) {
+            actualizarBadge(id, estado);
+            actualizarContadores();
+        }
+        return data;
+    }
+
+    // ── Buscador manual ───────────────────────────────────────────────────────
+    let seleccionado = null;
+    let debounce = null;
+
+    document.getElementById('buscador-input').addEventListener('input', function() {
+        clearTimeout(debounce);
+        const q = this.value.trim();
+        if (q.length < 2) {
+            document.getElementById('search-results').classList.add('hidden');
+            return;
+        }
+        debounce = setTimeout(() => buscar(q), 300);
+    });
+
+    document.addEventListener('click', e => {
+        if (!e.target.closest('.search-container'))
+            document.getElementById('search-results').classList.add('hidden');
+    });
+
+    async function buscar(q) {
+        const resp = await fetch(`${URL_BUSCAR}?q=${encodeURIComponent(q)}`);
+        const data = await resp.json();
+        const div  = document.getElementById('search-results');
+
+        if (data.resultados.length === 0) {
+            div.innerHTML = '<div class="result-item"><span style="color:var(--text-muted); font-size:0.8rem;">Sin resultados</span></div>';
+        } else {
+            div.innerHTML = data.resultados.map(r => `
+                <div class="result-item ${r.ya_registrado ? 'ya-reg' : ''}">
+                    <div>
+                        <div class="result-nombre">${r.nombre}</div>
+                        <div class="result-cedula">${r.cedula}
+                            ${r.ya_registrado ? '<span class="badge badge-presente" style="margin-left:6px;font-size:0.6rem;">YA REGISTRADO</span>' : ''}
+                        </div>
+                    </div>
+                    ${!r.ya_registrado ? `
+                        <button class="btn-agregar" onclick="abrirModal(${r.id}, '${r.nombre}', '${r.cedula}')">
+                            <i class="fa-solid fa-plus"></i> Agregar
+                        </button>` : ''}
+                </div>
+            `).join('');
+        }
+        div.classList.remove('hidden');
+    }
+
+    function abrirModal(id, nombre, cedula) {
+        seleccionado = id;
+        document.getElementById('modal-nombre').textContent = nombre;
+        document.getElementById('modal-cedula').textContent = cedula;
+        document.getElementById('modal-overlay').classList.add('visible');
+        document.getElementById('search-results').classList.add('hidden');
+        document.getElementById('buscador-input').value = '';
+    }
+
+    function cerrarModal() {
+        seleccionado = null;
+        document.getElementById('modal-overlay').classList.remove('visible');
+    }
+
+    async function confirmarMarca(estado) {
+        if (!seleccionado) return;
+        const data = await marcarEstudiante(seleccionado, estado);
+        if (data.ok) {
+            cerrarModal();
+            // Si no está en la tabla recargamos para que aparezca
+            if (!document.getElementById(`fila-${seleccionado}`)) location.reload();
+        }
+    }
+
+    // ── Polling ───────────────────────────────────────────────────────────────
+    async function polling() {
+        try {
+            const resp = await fetch(URL_ESTADO);
+            const data = await resp.json();
+            const min  = document.getElementById('minutos');
+            if (min) min.textContent = data.minutos_restantes;
+            data.asistencias.forEach(a => actualizarBadge(a.estudiante_id, a.estado));
+            actualizarContadores();
+            const hora = new Date().toLocaleTimeString('es-VE', { hour:'2-digit', minute:'2-digit' });
+            document.getElementById('ultima-act').textContent = `Actualizado ${hora}`;
+            document.getElementById('pie-tabla').textContent  = `Actualizado ${hora}`;
+        } catch(e) { console.error(e); }
+    }
+
+    function actualizarBadge(id, estado) {
+        const celda = document.getElementById(`estado-${id}`);
+        if (!celda) return;
+        celda.innerHTML = BADGES[estado] || '<span class="badge badge-sin">SIN REGISTRAR</span>';
+    }
+
+    function actualizarContadores() {
+        const filas = document.querySelectorAll('#tabla-est tbody tr');
+        let presentes = 0, sinReg = 0, total = filas.length;
+        filas.forEach(fila => {
+            const badge = fila.querySelector('.badge');
+            if (!badge) return;
+            if (badge.classList.contains('badge-presente')) presentes++;
+            if (badge.classList.contains('badge-sin'))      sinReg++;
+        });
+        document.getElementById('cnt-presentes').textContent = presentes;
+        document.getElementById('cnt-sin').textContent       = sinReg;
+        document.getElementById('cnt-total').textContent     = total;
+    }
+
+    polling();
+    setInterval(polling, 10000);
+</script>
+
+</body>
+</html>

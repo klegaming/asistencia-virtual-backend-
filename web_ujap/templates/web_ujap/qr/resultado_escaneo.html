@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA | Asistencia</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'web_ujap/css/resultado_escaneo.css' %}">
+</head>
+<body>
+
+<div class="container">
+
+    {% if exito %}
+    {# ── Éxito ──────────────────────────────────────────────────────────────── #}
+    <div class="icono">✅</div>
+    <div class="titulo exito">¡Asistencia registrada!</div>
+    <p class="subtitulo">{{ mensaje }}</p>
+
+    <div class="detalle-card">
+        <div class="detalle-row">
+            <span class="key">ESTUDIANTE</span>
+            <span class="val">{{ estudiante.nombre_completo }}</span>
+        </div>
+        <div class="detalle-row">
+            <span class="key">CÉDULA</span>
+            <span class="val">{{ estudiante.cedula }}</span>
+        </div>
+        <div class="detalle-row">
+            <span class="key">MATERIA</span>
+            <span class="val">{{ sesion.horario.materia.nombre }}</span>
+        </div>
+        <div class="detalle-row">
+            <span class="key">FECHA</span>
+            <span class="val">{{ sesion.fecha }}</span>
+        </div>
+        <div class="detalle-row">
+            <span class="key">ESTADO</span>
+            <span class="val"><span class="badge-presente">PRESENTE</span></span>
+        </div>
+        <div class="detalle-row">
+            <span class="key">MÉTODO</span>
+            <span class="val">Escaneo QR</span>
+        </div>
+    </div>
+
+    <a href="{% url 'pagina' %}" class="btn-home">
+        <i class="fa-solid fa-house"></i> &nbsp;IR A MI PANEL
+    </a>
+
+    {% else %}
+    {# ── Error ───────────────────────────────────────────────────────────────── #}
+    <div class="icono">❌</div>
+    <div class="titulo error">No se pudo registrar</div>
+    <p class="subtitulo">{{ mensaje }}</p>
+
+    {% if sesion %}
+    <div class="detalle-card">
+        <div class="detalle-row">
+            <span class="key">MATERIA</span>
+            <span class="val">{{ sesion.horario.materia.nombre }}</span>
+        </div>
+        <div class="detalle-row">
+            <span class="key">FECHA</span>
+            <span class="val">{{ sesion.fecha }}</span>
+        </div>
+    </div>
+    {% endif %}
+
+    <a href="{% url 'pagina' %}" class="btn-home secundario">
+        <i class="fa-solid fa-arrow-left"></i> &nbsp;VOLVER AL INICIO
+    </a>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>

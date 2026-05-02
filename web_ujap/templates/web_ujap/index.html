@@ -1,0 +1,273 @@
+{% extends 'web_ujap/base.html' %}
+
+{% block extra_css %}
+<style>
+    /* Tipografía del Dashboard */
+    .header-title { font-size: 2rem; font-weight: 700; margin: 0 0 5px 0; }
+    .header-subtitle { color: var(--text-dim); margin-bottom: 30px; font-size: 1rem; }
+
+    /* Tarjetas KPI */
+    .kpi-flex { display: flex; justify-content: space-between; align-items: center; }
+    .kpi-title { font-size: 0.8rem; text-transform: uppercase; color: var(--text-dim); letter-spacing: 1px; margin: 0; }
+    .kpi-value { font-size: 2.2rem; font-weight: 700; margin: 5px 0 0 0; }
+    .kpi-sub { font-size: 0.8rem; margin-top: 5px; }
+    .kpi-icon { font-size: 2.5rem; opacity: 0.2; }
+
+    /* Títulos de Secciones */
+    .section-header {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 0 0 20px 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--text-main);
+    }
+
+    /* Tablas estilo AURA */
+    .table-container { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th {
+        padding: 15px;
+        color: var(--text-dim);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 1px solid var(--border-color);
+        background-color: rgba(0,0,0,0.2);
+    }
+    td {
+        padding: 15px;
+        font-size: 0.9rem;
+        border-bottom: 1px solid rgba(42, 43, 50, 0.5);
+    }
+    tr:hover td { background-color: rgba(255,255,255,0.03); }
+    
+    /* Colores de texto */
+    .text-blue { color: var(--accent-blue); }
+    .text-green { color: var(--accent-green); }
+    .text-red { color: var(--accent-red); }
+    .text-yellow { color: var(--accent-yellow); }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div>
+    <h1 class="header-title">Dashboard General</h1>
+    <p class="header-subtitle">Resumen y estadísticas del día {{ hoy|date:"d/m/Y" }}</p>
+</div>
+
+<!-- KPI Cards -->
+<div class="grid grid-cols-4" style="margin-bottom: 30px;">
+    <!-- Total Estudiantes -->
+    <div class="aura-card kpi-flex" style="border-bottom: 3px solid var(--accent-blue);">
+        <div>
+            <p class="kpi-title">Total Estudiantes</p>
+            <p class="kpi-value">{{ total_estudiantes }}</p>
+        </div>
+        <i class="fas fa-users kpi-icon text-blue"></i>
+    </div>
+    
+    <!-- Presentes Hoy -->
+    <div class="aura-card kpi-flex" style="border-bottom: 3px solid var(--accent-green);">
+        <div>
+            <p class="kpi-title">Presentes Hoy</p>
+            <p class="kpi-value">{{ presentes_hoy }}</p>
+            <p class="kpi-sub text-green">{{ porcentaje_asistencia_hoy }}% de asistencia</p>
+        </div>
+        <i class="fas fa-check-circle kpi-icon text-green"></i>
+    </div>
+    
+    <!-- Ausentes Hoy -->
+    <div class="aura-card kpi-flex" style="border-bottom: 3px solid var(--accent-red);">
+        <div>
+            <p class="kpi-title">Ausentes Hoy</p>
+            <p class="kpi-value">{{ ausentes_hoy }}</p>
+        </div>
+        <i class="fas fa-times-circle kpi-icon text-red"></i>
+    </div>
+    
+    <!-- Tardanzas Hoy -->
+    <div class="aura-card kpi-flex" style="border-bottom: 3px solid var(--accent-yellow);">
+        <div>
+            <p class="kpi-title">Tardanzas Hoy</p>
+            <p class="kpi-value">{{ tardes_hoy }}</p>
+        </div>
+        <i class="fas fa-clock kpi-icon text-yellow"></i>
+    </div>
+</div>
+
+<!-- Gráficos -->
+<div class="grid grid-cols-2" style="margin-bottom: 30px;">
+    <div class="aura-card">
+        <h2 class="section-header"><i class="fas fa-chart-line text-blue"></i> Asistencias (7 Días)</h2>
+        <canvas id="chartAsistenciasSemana"></canvas>
+    </div>
+    
+    <div class="aura-card">
+        <h2 class="section-header"><i class="fas fa-chart-pie text-blue"></i> Estados Hoy</h2>
+        <canvas id="chartEstadosHoy"></canvas>
+    </div>
+</div>
+
+<!-- Tablas de Datos -->
+<div class="grid grid-cols-2" style="margin-bottom: 30px;">
+    <!-- Estudiantes con Más Faltas -->
+    <div class="aura-card">
+        <h2 class="section-header"><i class="fas fa-exclamation-triangle text-red"></i> Más Faltas</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Estudiante</th>
+                        <th>Matrícula</th>
+                        <th>Faltas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for est in estudiantes_faltas %}
+                    <tr>
+                        <td style="color: white;">{{ est.nombre_completo }}</td>
+                        <td style="color: var(--text-dim);">{{ est.matricula }}</td>
+                        <td>
+                            <span class="{% if est.total_faltas > 5 %}text-red font-bold{% else %}text-white{% endif %}">
+                                {{ est.total_faltas }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="3" style="text-align: center; color: var(--text-dim);">No hay datos</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Estudiantes con Mejor Asistencia -->
+    <div class="aura-card">
+        <h2 class="section-header"><i class="fas fa-trophy text-yellow"></i> Mejor Asistencia</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Estudiante</th>
+                        <th>Matrícula</th>
+                        <th>% Asist.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in estudiantes_mejor_asistencia %}
+                    <tr>
+                        <td style="color: white;">{{ item.estudiante.nombre_completo }}</td>
+                        <td style="color: var(--text-dim);">{{ item.estudiante.matricula }}</td>
+                        <td class="text-green" style="font-weight: bold;">{{ item.porcentaje }}%</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="3" style="text-align: center; color: var(--text-dim);">No hay datos</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Horarios y Materias -->
+<div class="grid grid-cols-2" style="margin-bottom: 30px;">
+    <!-- Horarios de Hoy -->
+    <div class="aura-card">
+        <h2 class="section-header"><i class="fas fa-calendar-day text-blue"></i> Horarios ({{ dia_hoy|title }})</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Hora</th>
+                        <th>Materia</th>
+                        <th>Profesor / Aula</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for horario in horarios_hoy %}
+                    <tr>
+                        <td style="font-weight: bold; color: var(--accent-blue);">
+                            {{ horario.hora_inicio|time:"H:i" }} - {{ horario.hora_fin|time:"H:i" }}
+                        </td>
+                        <td style="color: white;">{{ horario.materia.nombre }}</td>
+                        <td style="color: var(--text-dim);">{{ horario.profesor }} <br> <span style="font-size: 0.8rem;">Aula: {{ horario.aula }}</span></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="3" style="text-align: center; color: var(--text-dim);">No hay clases programadas hoy</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Materias con Más Ausencias -->
+    <div class="aura-card">
+        <h2 class="section-header"><i class="fas fa-book-open text-blue"></i> Ausencias por Materia</h2>
+        <canvas id="chartMaterias"></canvas>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Ajuste de colores para modo oscuro en Chart.js
+    Chart.defaults.font.family = 'Inter';
+    Chart.defaults.color = '#8b8c91'; // Color de texto de los ejes
+    Chart.defaults.borderColor = '#2a2b32'; // Color de las líneas del grid
+    
+    // Gráfico de Asistencias Semanales
+    fetch('{% url "dashboard:estadisticas_json" %}?tipo=asistencias_semana')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('chartAsistenciasSemana');
+            new Chart(ctx, {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { display: true, position: 'top' } },
+                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                }
+            });
+        });
+    
+    // Gráfico de Estados Hoy
+    fetch('{% url "dashboard:estadisticas_json" %}?tipo=estados_hoy')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('chartEstadosHoy');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { display: true, position: 'bottom' } },
+                    elements: { arc: { borderColor: '#14151a', borderWidth: 2 } } // Borde oscuro para la dona
+                }
+            });
+        });
+    
+    // Gráfico de Materias
+    fetch('{% url "dashboard:estadisticas_json" %}?tipo=asistencias_por_materia')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('chartMaterias');
+            new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        });
+</script>
+{% endblock %}

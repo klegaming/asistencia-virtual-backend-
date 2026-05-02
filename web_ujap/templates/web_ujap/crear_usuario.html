@@ -24,12 +24,12 @@
                 {% csrf_token %}
 
                 <div class="field-group">
-    <label>USUARIO</label>
-    <div class="input-wrapper">
-        <i class="fa-solid fa-user icon-left"></i>
-        <input type="text" name="username" placeholder="Ej: kleiver123" required>
-    </div>
-</div>
+                    <label>USUARIO</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-user icon-left"></i>
+                        <input type="text" name="username" placeholder="Ej: ktorrealb25" required>
+                    </div>
+                </div>
 
                 <div class="field-group">
                     <label>CÉDULA</label>
@@ -39,25 +39,21 @@
                     </div>
                 </div>
 
+                {# ── NUEVO: Sección ─────────────────────────────────────── #}
                 <div class="field-group">
-                    <label>FACULTAD</label>
+                    <label>SECCIÓN</label>
                     <div class="input-wrapper">
-                        <i class="fa-solid fa-building-columns icon-left"></i>
-                        <select name="facultad" required>
-                            <option value="">Seleccionar...</option>
-                            <option value="ingenieria">Facultad de Ingeniería</option>
-                            <option value="medicina">Facultad de Medicina</option>
-                            <option value="derecho">Facultad de Derecho</option>
-                            <option value="ciencias">Facultad de Ciencias</option>
+                        <i class="fa-solid fa-users icon-left"></i>
+                        <select name="seccion" required>
+                            <option value="">Seleccionar sección...</option>
+                            {% for s in secciones %}
+                                <option value="{{ s.id }}">
+                                    Sección {{ s.codigo }} — {{ s.carrera }} ({{ s.periodo }})
+                                </option>
+                            {% empty %}
+                                <option disabled>No hay secciones disponibles</option>
+                            {% endfor %}
                         </select>
-                    </div>
-                </div>
-
-                <div class="field-group">
-                    <label>CORREO</label>
-                    <div class="input-wrapper">
-                        <i class="fa-solid fa-envelope icon-left"></i>
-                        <input type="email" name="email" placeholder="example@gmail.com" required>
                     </div>
                 </div>
 

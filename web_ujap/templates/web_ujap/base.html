@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AURA | Dashboard{% endblock %}</title>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --bg-main: #0b0c10;
+            --bg-card: #14151a;
+            --text-main: #ffffff;
+            --text-dim: #8b8c91;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-red: #ff4d4d;
+            --accent-yellow: #f59e0b;
+            --border-color: #2a2b32;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+        }
+
+        /* Navbar AURA */
+        nav {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .nav-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .nav-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            letter-spacing: 4px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .nav-brand i { color: var(--accent-blue); font-size: 1.5rem; }
+        .nav-brand span { color: var(--accent-blue); font-size: 0.8rem; letter-spacing: 0; font-weight: 500; }
+
+        .nav-actions { display: flex; align-items: center; gap: 20px; }
+
+        /* Botón Volver Atrás */
+        .btn-back {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+        .btn-back:hover { color: var(--text-main); }
+
+        main {
+            max-width: 1280px;
+            margin: 40px auto;
+            padding: 0 20px;
+            min-height: 80vh;
+        }
+
+        /* Clases Globales */
+        .aura-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: transform 0.2s ease;
+        }
+        .aura-card:hover { transform: translateY(-3px); }
+
+        .grid { display: grid; gap: 24px; }
+        .grid-cols-4 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+        .grid-cols-2 { grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); }
+
+        footer {
+            background-color: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            padding: 20px;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            margin-top: 40px;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    
+    <nav>
+        <div class="nav-inner">
+            <!-- Cambia el div por un enlace <a> -->
+            <a href="{% url 'pagina' %}" class="nav-brand" style="text-decoration: none; color: inherit;">
+                <i class="fas fa-fingerprint"></i> A U R A <span>ASISTENCIA</span>
+            </a>
+            
+            <div class="nav-actions">
+                <a onclick="history.back()" class="btn-back">
+                    <i class="fas fa-arrow-left"></i> VOLVER
+                </a>
+                <div style="color: var(--text-dim); font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-user-circle"></i> Kleiver
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    
+    <footer>
+        © {{ current_year }} AURA Sistema de Asistencia Virtual - Todos los derechos reservados
+    </footer>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

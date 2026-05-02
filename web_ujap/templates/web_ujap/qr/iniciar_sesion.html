@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA | Iniciar Clase</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'web_ujap/css/iniciar_sesion.css' %}">
+</head>
+<body>
+
+<div class="container">
+
+    <a href="{% url 'pagina' %}" class="btn-volver">
+        <i class="fa-solid fa-arrow-left"></i> Volver
+    </a>
+
+    <div class="brand">
+        <h1>A U R A</h1>
+        <span>ASISTENCIA</span>
+    </div>
+
+    <div class="card">
+        <h2>Iniciar clase</h2>
+        <p>Elegí el horario de hoy y generá el QR para tus estudiantes.</p>
+
+        {% if error %}
+            <div class="alert-warning">
+                <i class="fa-solid fa-triangle-exclamation"></i> {{ error }}
+            </div>
+        {% endif %}
+
+        {% if not horarios %}
+            <div class="alert-warning">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                No tenés horarios asignados. Pedile al administrador que te los cargue.
+            </div>
+        {% else %}
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="field-group">
+                <label>HORARIO DE HOY</label>
+                <select name="horario" required>
+                    <option value="">— Seleccioná —</option>
+                    {% for h in horarios %}
+                        <option value="{{ h.id }}">
+                            {{ h.materia.nombre }} —
+                            {{ h.get_dia_semana_display }}
+                            {{ h.hora_inicio|time:"H:i" }}-{{ h.hora_fin|time:"H:i" }}
+                            (Aula {{ h.aula }} | Sección {{ h.seccion.codigo }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="field-group">
+                <label>TIEMPO PARA ESCANEAR</label>
+                <select name="duracion">
+                    <option value="10">10 minutos</option>
+                    <option value="15" selected>15 minutos</option>
+                    <option value="20">20 minutos</option>
+                    <option value="30">30 minutos</option>
+                </select>
+                <div class="help-text">
+                    Después de ese tiempo el QR expira automáticamente.
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                <i class="fa-solid fa-qrcode"></i>
+                GENERAR QR Y COMENZAR
+            </button>
+        </form>
+        {% endif %}
+    </div>
+
+</div>
+
+</body>
+</html>

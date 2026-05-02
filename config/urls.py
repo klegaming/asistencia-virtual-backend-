@@ -25,7 +25,8 @@ from web_ujap.views import (
     recuperar_confirmar_view,
     usuario_view,
     pagina_view,
-    logout_view
+    logout_view,
+    escanear_qr_view,   
 ) 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -39,5 +40,10 @@ urlpatterns = [
     path('dashboard/', include('web_ujap.urls')),  # Dashboard
     path('pagina/', pagina_view, name='pagina'),
     path('salir/', logout_view, name='logout'),
+    path('asistencia/escanear/<uuid:token>/', escanear_qr_view, name='escanear_qr'),
+
+
+
 
 ]
+

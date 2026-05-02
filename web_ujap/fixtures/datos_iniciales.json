@@ -1,0 +1,327 @@
+[
+  {
+    "model": "web_ujap.materia",
+    "pk": 1,
+    "fields": {
+      "nombre": "Creatividad e Inventiva",
+      "codigo": "CIN02303",
+      "descripcion": "",
+      "creditos": 3,
+      "activa": true
+    }
+  },
+  {
+    "model": "web_ujap.materia",
+    "pk": 2,
+    "fields": {
+      "nombre": "Matemática II",
+      "codigo": "MAI02506",
+      "descripcion": "",
+      "creditos": 5,
+      "activa": true
+    }
+  },
+  {
+    "model": "web_ujap.materia",
+    "pk": 3,
+    "fields": {
+      "nombre": "Física I",
+      "codigo": "FIS02405",
+      "descripcion": "",
+      "creditos": 4,
+      "activa": true
+    }
+  },
+  {
+    "model": "web_ujap.materia",
+    "pk": 4,
+    "fields": {
+      "nombre": "Programación I",
+      "codigo": "PRO02305",
+      "descripcion": "",
+      "creditos": 3,
+      "activa": true
+    }
+  },
+  {
+    "model": "web_ujap.materia",
+    "pk": 5,
+    "fields": {
+      "nombre": "Álgebra Lineal",
+      "codigo": "ALI02304",
+      "descripcion": "",
+      "creditos": 3,
+      "activa": true
+    }
+  },
+
+  {
+    "model": "web_ujap.seccion",
+    "pk": 1,
+    "fields": {
+      "codigo": "10212",
+      "periodo": "20261CR",
+      "carrera": "Ingeniería en Computación",
+      "activa": true
+    }
+  },
+  {
+    "model": "web_ujap.seccion",
+    "pk": 2,
+    "fields": {
+      "codigo": "10213",
+      "periodo": "20261CR",
+      "carrera": "Ingeniería en Computación",
+      "activa": true
+    }
+  },
+
+  {
+    "model": "web_ujap.horario",
+    "pk": 1,
+    "fields": {
+      "seccion": 1,
+      "materia": 1,
+      "dia_semana": "lunes",
+      "hora_inicio": "07:00:00",
+      "hora_fin": "09:25:00",
+      "aula": "1P03",
+      "profesor": null
+    }
+  },
+  {
+    "model": "web_ujap.horario",
+    "pk": 2,
+    "fields": {
+      "seccion": 1,
+      "materia": 2,
+      "dia_semana": "martes",
+      "hora_inicio": "07:45:00",
+      "hora_fin": "09:25:00",
+      "aula": "4P07",
+      "profesor": null
+    }
+  },
+  {
+    "model": "web_ujap.horario",
+    "pk": 3,
+    "fields": {
+      "seccion": 1,
+      "materia": 3,
+      "dia_semana": "martes",
+      "hora_inicio": "08:30:00",
+      "hora_fin": "10:10:00",
+      "aula": "4405",
+      "profesor": null
+    }
+  },
+  {
+    "model": "web_ujap.horario",
+    "pk": 4,
+    "fields": {
+      "seccion": 1,
+      "materia": 4,
+      "dia_semana": "miercoles",
+      "hora_inicio": "09:25:00",
+      "hora_fin": "11:05:00",
+      "aula": "4458",
+      "profesor": null
+    }
+  },
+  {
+    "model": "web_ujap.horario",
+    "pk": 5,
+    "fields": {
+      "seccion": 1,
+      "materia": 5,
+      "dia_semana": "lunes",
+      "hora_inicio": "10:20:00",
+      "hora_fin": "11:05:00",
+      "aula": "1P10",
+      "profesor": null
+    }
+  },
+  {
+    "model": "web_ujap.horario",
+    "pk": 6,
+    "fields": {
+      "seccion": 1,
+      "materia": 3,
+      "dia_semana": "jueves",
+      "hora_inicio": "08:40:00",
+      "hora_fin": "10:10:00",
+      "aula": "4447",
+      "profesor": null
+    }
+  },
+  {
+    "model": "web_ujap.horario",
+    "pk": 7,
+    "fields": {
+      "seccion": 1,
+      "materia": 3,
+      "dia_semana": "viernes",
+      "hora_inicio": "08:40:00",
+      "hora_fin": "11:05:00",
+      "aula": "4404",
+      "profesor": null
+    }
+  },
+  {
+    "model": "web_ujap.horario",
+    "pk": 8,
+    "fields": {
+      "seccion": 1,
+      "materia": 2,
+      "dia_semana": "miercoles",
+      "hora_inicio": "11:05:00",
+      "hora_fin": "12:45:00",
+      "aula": "1P14",
+      "profesor": null
+    }
+  },
+
+  {
+    "model": "web_ujap.horario",
+    "pk": 9,
+    "fields": {
+      "seccion": 2,
+      "materia": 4,
+      "dia_semana": "lunes",
+      "hora_inicio": "07:00:00",
+      "hora_fin": "08:30:00",
+      "aula": "4458",
+      "profesor": null
+    }
+  },
+  {
+    "model": "web_ujap.horario",
+    "pk": 10,
+    "fields": {
+      "seccion": 2,
+      "materia": 2,
+      "dia_semana": "martes",
+      "hora_inicio": "07:00:00",
+      "hora_fin": "08:30:00",
+      "aula": "1P11",
+      "profesor": null
+    }
+  },
+  {
+    "model": "web_ujap.horario",
+    "pk": 11,
+    "fields": {
+      "seccion": 2,
+      "materia": 4,
+      "dia_semana": "miercoles",
+      "hora_inicio": "07:00:00",
+      "hora_fin": "08:30:00",
+      "aula": "4447",
+      "profesor": null
+    }
+  },
+  {
+    "model": "web_ujap.horario",
+    "pk": 12,
+    "fields": {
+      "seccion": 2,
+      "materia": 2,
+      "dia_semana": "jueves",
+      "hora_inicio": "07:00:00",
+      "hora_fin": "08:30:00",
+      "aula": "1P11",
+      "profesor": null
+    }
+  },
+  {
+    "model": "web_ujap.horario",
+    "pk": 13,
+    "fields": {
+      "seccion": 2,
+      "materia": 3,
+      "dia_semana": "lunes",
+      "hora_inicio": "08:40:00",
+      "hora_fin": "10:10:00",
+      "aula": "4418",
+      "profesor": null
+    }
+  },
+  {
+    "model": "web_ujap.horario",
+    "pk": 14,
+    "fields": {
+      "seccion": 2,
+      "materia": 5,
+      "dia_semana": "martes",
+      "hora_inicio": "08:40:00",
+      "hora_fin": "10:10:00",
+      "aula": "1P10",
+      "profesor": null
+    }
+  },
+  {
+    "model": "web_ujap.horario",
+    "pk": 15,
+    "fields": {
+      "seccion": 2,
+      "materia": 4,
+      "dia_semana": "miercoles",
+      "hora_inicio": "08:40:00",
+      "hora_fin": "09:25:00",
+      "aula": "4447",
+      "profesor": null
+    }
+  },
+  {
+    "model": "web_ujap.horario",
+    "pk": 16,
+    "fields": {
+      "seccion": 2,
+      "materia": 5,
+      "dia_semana": "jueves",
+      "hora_inicio": "09:25:00",
+      "hora_fin": "10:10:00",
+      "aula": "1P11",
+      "profesor": null
+    }
+  },
+  {
+    "model": "web_ujap.horario",
+    "pk": 17,
+    "fields": {
+      "seccion": 2,
+      "materia": 1,
+      "dia_semana": "viernes",
+      "hora_inicio": "09:25:00",
+      "hora_fin": "11:50:00",
+      "aula": "1P03",
+      "profesor": null
+    }
+  },
+  {
+    "model": "web_ujap.horario",
+    "pk": 18,
+    "fields": {
+      "seccion": 2,
+      "materia": 2,
+      "dia_semana": "miercoles",
+      "hora_inicio": "12:00:00",
+      "hora_fin": "13:30:00",
+      "aula": "1P04",
+      "profesor": null
+    }
+  },
+  {
+    "model": "web_ujap.horario",
+    "pk": 19,
+    "fields": {
+      "seccion": 2,
+      "materia": 3,
+      "dia_semana": "viernes",
+      "hora_inicio": "07:00:00",
+      "hora_fin": "09:25:00",
+      "aula": "4418",
+      "profesor": null
+    }
+  }
+]
